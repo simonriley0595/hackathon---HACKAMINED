@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXON ERP — Next-Gen Smart Manufacturing Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0a0a0b;--paper:#f4f1eb;--paper2:#ede9e0;--ash:#8a8680;--smoke:#c8c4bc;
+  --accent:#e8451a;--accent2:#1a6ee8;--accent3:#18a86b;--gold:#c9a84c;
+  --d1:#0f0f12;--d2:#141418;--d3:#1a1a1f;--d4:#202028;--d5:#2a2a35;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
+  --text1:#f0f0f5;--text2:#9090a0;--text3:#606070;
+  --sans:'Geist',sans-serif;--serif:'Instrument Serif',serif;--mono:'Geist Mono',monospace;
+  --r:12px;
+}
+html{font-size:15px}
+body{background:var(--ink);color:var(--text1);font-family:var(--sans);overflow-x:hidden;cursor:none;min-height:100vh}
+#cur{position:fixed;width:8px;height:8px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform .08s}
+#cur2{position:fixed;width:32px;height:32px;border:1px solid rgba(255,255,255,.2);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:all .16s cubic-bezier(.23,1,.32,1)}
+
+/* ═══ PAGE SYSTEM ═══ */
+.page{display:none;width:100%;min-height:100vh}
+.page.active{display:block}
+
+/* ══════════════════════════════════════
+   LANDING PAGE
+══════════════════════════════════════ */
+#page-landing{background:var(--ink)}
+
+/* NAV */
+.ln-nav{position:fixed;top:0;left:0;right:0;z-index:900;height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 52px;background:rgba(10,10,11,.75);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.ln-logo{font-family:var(--serif);font-size:1.4rem;color:var(--text1);display:flex;align-items:center;gap:8px;letter-spacing:-.01em}
+.ln-logo-dot{width:7px;height:7px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.ln-links{display:flex;gap:28px}
+.ln-links a{color:var(--text2);font-size:.83rem;text-decoration:none;font-weight:500;letter-spacing:.03em;transition:color .2s}
+.ln-links a:hover{color:var(--text1)}
+.ln-btns{display:flex;gap:10px}
+.btn{padding:8px 20px;border-radius:999px;font-size:.82rem;font-weight:600;cursor:pointer;font-family:var(--sans);transition:all .25s;letter-spacing:.01em;border:none}
+.btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--text1)}
+.btn-ghost:hover{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.05)}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{background:#c93a14;transform:scale(1.03)}
+.btn-white{background:var(--text1);color:var(--ink)}
+.btn-white:hover{background:var(--accent);color:#fff}
+
+/* HERO */
+.ln-hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;padding:100px 52px 60px;gap:60px;align-items:center;position:relative;overflow:hidden}
+.ln-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 55% at 75% 50%,rgba(232,69,26,.07),transparent)}
+.lh-eyebrow{font-family:var(--mono);font-size:.68rem;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:22px;display:flex;align-items:center;gap:10px;opacity:0;transform:translateY(12px)}
+.lh-eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--accent)}
+.lh-h1{font-family:var(--serif);font-size:clamp(3rem,5.5vw,5.5rem);line-height:1.03;letter-spacing:-.025em;color:var(--text1);opacity:0;transform:translateY(24px)}
+.lh-h1 .it{font-style:italic;color:rgba(255,255,255,.35)}
+.lh-h1 .red{color:var(--accent)}
+.lh-sub{font-size:1rem;line-height:1.75;color:var(--text2);max-width:460px;margin-top:24px;opacity:0;transform:translateY(14px)}
+.lh-actions{display:flex;gap:14px;margin-top:40px;opacity:0;transform:translateY(14px)}
+.lh-cta{padding:14px 36px;background:var(--accent);border:none;border-radius:999px;color:#fff;font-size:.95rem;font-weight:700;cursor:pointer;font-family:var(--sans);transition:all .3s}
+.lh-cta:hover{background:#c93a14;transform:scale(1.04);box-shadow:0 0 40px rgba(232,69,26,.3)}
+.lh-ghost{padding:14px 28px;background:transparent;border:1px solid var(--border2);border-radius:999px;color:var(--text1);font-size:.95rem;font-weight:500;cursor:pointer;font-family:var(--sans);transition:all .25s}
+.lh-ghost:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.05)}
+.lh-stats{display:flex;gap:36px;margin-top:52px;opacity:0}
+.lhs-item .num{font-family:var(--serif);font-size:2rem;letter-spacing:-.03em;color:var(--text1)}
+.lhs-item .lbl{font-family:var(--mono);font-size:.65rem;color:var(--text3);margin-top:3px;letter-spacing:.05em;text-transform:uppercase}
+
+/* HERO DASHBOARD PREVIEW */
+.lh-right{position:relative;opacity:0;transform:translateY(24px) scale(.97)}
+.lh-screen{border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--d2);box-shadow:0 40px 80px rgba(0,0,0,.5)}
+.scr-bar{height:38px;background:var(--d1);display:flex;align-items:center;padding:0 14px;gap:8px;border-bottom:1px solid var(--border)}
+.scr-dot{width:9px;height:9px;border-radius:50%}
+.scr-title{font-family:var(--mono);font-size:.65rem;color:var(--text3);margin-left:10px}
+.scr-body{padding:16px;display:flex;flex-direction:column;gap:12px}
+.scr-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.scr-kpi{background:var(--d3);border-radius:8px;padding:12px;border:1px solid var(--border)}
+.scr-kpi-lbl{font-family:var(--mono);font-size:.56rem;color:var(--text3);margin-bottom:5px;text-transform:uppercase}
+.scr-kpi-val{font-family:var(--serif);font-size:1.35rem;color:var(--text1)}
+.scr-kpi-chg{font-size:.6rem;margin-top:3px}
+.scr-kpi-chg.up{color:var(--accent3)}.scr-kpi-chg.dn{color:var(--accent)}
+.scr-charts{display:grid;grid-template-columns:1.4fr 1fr;gap:8px}
+.scr-chart-box{background:var(--d3);border-radius:8px;padding:12px;border:1px solid var(--border)}
+.scr-ct{font-family:var(--mono);font-size:.58rem;color:var(--text3);margin-bottom:8px;text-transform:uppercase}
+.mini-bars{display:flex;align-items:flex-end;gap:3px;height:55px}
+.mb{flex:1;border-radius:2px 2px 0 0;transition:height .8s}
+.scr-table{background:var(--d3);border-radius:8px;border:1px solid var(--border);overflow:hidden}
+.str{display:grid;grid-template-columns:1fr 1fr 70px;padding:7px 12px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.65rem}
+.str.head{font-family:var(--mono);color:var(--text3);font-size:.58rem}
+.stbadge{padding:1px 6px;border-radius:3px;font-family:var(--mono);font-size:.55rem;font-weight:600}
+.sb-g{background:rgba(24,168,107,.15);color:var(--accent3)}
+.sb-a{background:rgba(201,168,76,.15);color:var(--gold)}
+.sb-r{background:rgba(232,69,26,.15);color:var(--accent)}
+
+/* TICKER */
+.ticker-wrap{background:var(--accent);padding:10px 0;overflow:hidden;position:relative}
+.ticker-inner{display:flex;animation:tick 28s linear infinite;width:max-content}
+.tick-item{padding:0 44px;font-family:var(--mono);font-size:.74rem;font-weight:500;color:#fff;white-space:nowrap;letter-spacing:.06em;display:flex;align-items:center;gap:16px}
+.tick-item::after{content:'◆';opacity:.4;font-size:.5rem}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* FEATURES SECTION */
+.ln-features{padding:110px 52px;background:var(--d1)}
+.feat-head{text-align:center;margin-bottom:70px}
+.feat-tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:14px}
+.feat-h2{font-family:var(--serif);font-size:clamp(2.4rem,4vw,3.8rem);letter-spacing:-.025em;color:var(--text1)}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1100px;margin:0 auto}
+.feat-card{background:var(--d2);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .3s;cursor:default;position:relative;overflow:hidden}
+.feat-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .4s}
+.feat-card:nth-child(1)::before{background:radial-gradient(circle at 20% 20%,rgba(232,69,26,.08),transparent 70%)}
+.feat-card:nth-child(2)::before{background:radial-gradient(circle at 20% 20%,rgba(26,110,232,.08),transparent 70%)}
+.feat-card:nth-child(3)::before{background:radial-gradient(circle at 20% 20%,rgba(24,168,107,.08),transparent 70%)}
+.feat-card:nth-child(4)::before{background:radial-gradient(circle at 20% 20%,rgba(201,168,76,.08),transparent 70%)}
+.feat-card:nth-child(5)::before{background:radial-gradient(circle at 20% 20%,rgba(232,69,26,.06),transparent 70%)}
+.feat-card:nth-child(6)::before{background:radial-gradient(circle at 20% 20%,rgba(26,110,232,.06),transparent 70%)}
+.feat-card:hover{transform:translateY(-5px);border-color:var(--border2)}
+.feat-card:hover::before{opacity:1}
+.fc-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:18px}
+.fc-tag{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;opacity:.6}
+.fc-title{font-size:.98rem;font-weight:700;margin-bottom:10px;color:var(--text1)}
+.fc-body{font-size:.82rem;line-height:1.68;color:var(--text2)}
+.fc-stat{margin-top:18px;padding-top:14px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.fc-stat-val{font-family:var(--serif);font-size:1.35rem;letter-spacing:-.02em}
+.fc-stat-lbl{font-family:var(--mono);font-size:.6rem;color:var(--text3)}
+
+/* CTA SECTION */
+.ln-cta{padding:120px 52px;background:var(--paper);color:var(--ink);position:relative;overflow:hidden}
+.ln-cta::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;border-radius:50%;background:rgba(232,69,26,.08)}
+.lcta-inner{max-width:680px;margin:0 auto;text-align:center;position:relative}
+.lcta-tag{font-family:var(--mono);font-size:.68rem;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:16px}
+.lcta-h2{font-family:var(--serif);font-size:clamp(2.5rem,4.5vw,4rem);letter-spacing:-.025em;color:var(--ink);margin-bottom:16px}
+.lcta-sub{font-size:.96rem;color:rgba(10,10,11,.45);line-height:1.75;margin-bottom:40px}
+.lcta-form{display:flex;gap:10px;max-width:480px;margin:0 auto 14px}
+.lcta-input{flex:1;padding:13px 18px;background:var(--paper2);border:1px solid rgba(10,10,11,.15);border-radius:10px;font-size:.88rem;font-family:var(--sans);color:var(--ink);outline:none;transition:border .2s}
+.lcta-input:focus{border-color:var(--accent)}
+.lcta-input::placeholder{color:rgba(10,10,11,.3)}
+.lcta-btn{padding:13px 28px;background:var(--ink);color:#fff;border:none;border-radius:10px;font-size:.9rem;font-weight:700;font-family:var(--sans);cursor:pointer;white-space:nowrap;transition:all .3s}
+.lcta-btn:hover{background:var(--accent)}
+.lcta-note{font-family:var(--mono);font-size:.68rem;color:rgba(10,10,11,.3)}
+
+/* FOOTER */
+.ln-footer{background:var(--ink);padding:52px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.lf-logo{font-family:var(--serif);font-size:1.2rem;color:var(--text1)}
+.lf-copy{font-family:var(--mono);font-size:.68rem;color:var(--text3)}
+.lf-links{display:flex;gap:24px}
+.lf-links a{font-size:.78rem;color:var(--text3);text-decoration:none;transition:color .2s}
+.lf-links a:hover{color:var(--text1)}
+
+/* ══════════════════════════════════════
+   ONBOARDING / TRIAL FLOW
+══════════════════════════════════════ */
+#page-onboard{background:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 20px}
+.ob-wrap{width:100%;max-width:560px}
+.ob-logo{font-family:var(--serif);font-size:1.3rem;color:var(--text1);text-align:center;margin-bottom:40px;display:flex;align-items:center;justify-content:center;gap:8px}
+.ob-logo-dot{width:7px;height:7px;background:var(--accent);border-radius:50%}
+.ob-card{background:var(--d2);border:1px solid var(--border);border-radius:20px;overflow:hidden}
+.ob-progress{height:2px;background:rgba(255,255,255,.06)}
+.ob-prog-bar{height:100%;background:var(--accent);transition:width .5s}
+.ob-steps-row{display:flex;align-items:center;padding:22px 28px 0;gap:4px}
+.obs-item{display:flex;align-items:center;gap:6px}
+.obs-num{width:24px;height:24px;border-radius:50%;border:1.5px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:.66rem;font-family:var(--mono);color:var(--text3);flex-shrink:0;transition:all .3s}
+.obs-num.active{border-color:var(--accent);color:var(--accent)}
+.obs-num.done{background:var(--accent);border-color:var(--accent);color:#fff}
+.obs-lbl{font-size:.68rem;color:var(--text3);font-family:var(--mono);transition:color .3s}
+.obs-lbl.active{color:var(--text1)}
+.obs-line{flex:1;height:1px;background:rgba(255,255,255,.07);margin:0 4px;transition:background .4s}
+.obs-line.done{background:var(--accent)}
+.ob-body{padding:26px 28px 28px}
+.ob-title{font-family:var(--serif);font-size:1.7rem;letter-spacing:-.02em;color:var(--text1);margin-bottom:6px}
+.ob-sub{font-size:.83rem;color:var(--text2);line-height:1.6;margin-bottom:22px}
+.ob-fields{display:flex;flex-direction:column;gap:11px}
+.ob-row{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.ob-field{display:flex;flex-direction:column;gap:5px}
+.ob-label{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;color:var(--text2);text-transform:uppercase}
+.ob-input{padding:11px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:9px;font-size:.87rem;font-family:var(--sans);color:var(--text1);outline:none;transition:border .2s}
+.ob-input:focus{border-color:var(--accent);background:rgba(232,69,26,.04)}
+.ob-input.err{border-color:rgba(232,69,26,.6)}
+.ob-input::placeholder{color:var(--text3)}
+.ob-err{font-size:.68rem;color:var(--accent);display:none}
+.ob-err.show{display:block}
+.ob-select{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23606070' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px}
+.ob-select option{background:var(--d2)}
+/* Plan grid */
+.plan-grid-ob{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.plan-ob{border:1.5px solid rgba(255,255,255,.08);border-radius:12px;padding:14px 10px;cursor:pointer;text-align:center;transition:all .25s}
+.plan-ob:hover{border-color:rgba(255,255,255,.2)}
+.plan-ob.sel{border-color:var(--accent);background:rgba(232,69,26,.05)}
+.plan-ob-name{font-weight:700;font-size:.85rem;color:var(--text1);margin-bottom:4px}
+.plan-ob-price{font-family:var(--serif);font-size:1.3rem;color:var(--accent);margin-bottom:4px}
+.plan-ob-price span{font-family:var(--sans);font-size:.65rem;color:var(--text3)}
+.plan-ob-desc{font-size:.68rem;color:var(--text3)}
+.plan-ob-chk{display:none;color:var(--accent);font-size:.75rem;margin-top:6px}
+.plan-ob.sel .plan-ob-chk{display:block}
+/* Module checkboxes */
+.mod-grid-ob{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mod-ob{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1.5px solid rgba(255,255,255,.08);border-radius:10px;cursor:pointer;transition:all .22s}
+.mod-ob:hover{border-color:rgba(255,255,255,.2)}
+.mod-ob.sel{border-color:var(--accent);background:rgba(232,69,26,.04)}
+.mod-ob-cb{width:17px;height:17px;border-radius:4px;border:1.5px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:.6rem;transition:all .2s;flex-shrink:0}
+.mod-ob.sel .mod-ob-cb{background:var(--accent);border-color:var(--accent);color:#fff}
+.mod-ob-label{font-size:.82rem;font-weight:600;color:var(--text1)}
+/* Footer row */
+.ob-foot{display:flex;gap:10px;margin-top:20px}
+.ob-back{padding:11px 18px;background:transparent;border:1px solid rgba(255,255,255,.1);border-radius:9px;color:var(--text2);font-size:.84rem;font-family:var(--sans);cursor:pointer;transition:all .2s}
+.ob-back:hover{border-color:rgba(255,255,255,.25);color:var(--text1)}
+.ob-next{flex:1;padding:11px 18px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:.88rem;font-weight:700;font-family:var(--sans);cursor:pointer;transition:all .3s}
+.ob-next:hover{background:#c93a14}
+/* PW strength */
+.pw-row{display:flex;gap:3px;margin-top:4px}
+.pw-b{flex:1;height:2px;border-radius:2px;background:rgba(255,255,255,.07);transition:background .3s}
+.pw-hint{font-size:.65rem;margin-top:3px;color:var(--text3);transition:color .3s}
+/* Loading */
+.ob-loading{display:none;flex-direction:column;align-items:center;padding:44px 28px;gap:18px}
+.ob-loading.show{display:flex}
+.ob-spin{width:52px;height:52px;border-radius:50%;border:2.5px solid rgba(255,255,255,.07);border-top-color:var(--accent);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ob-spin-title{font-family:var(--serif);font-size:1.3rem;color:var(--text1);text-align:center}
+.ob-steps-load{display:flex;flex-direction:column;gap:8px;width:100%;max-width:290px}
+.ob-sl{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:.75rem;color:var(--text3);transition:color .3s}
+.ob-sl.act{color:var(--accent)}.ob-sl.done{color:var(--accent3)}
+/* Success */
+.ob-success{display:none;flex-direction:column;align-items:center;padding:36px 28px;text-align:center;gap:13px}
+.ob-success.show{display:flex}
+.ob-succ-ring{width:64px;height:64px;border-radius:50%;background:rgba(24,168,107,.1);border:2px solid var(--accent3);display:flex;align-items:center;justify-content:center;font-size:1.6rem;animation:pop .5s cubic-bezier(.23,1,.32,1)}
+@keyframes pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.ob-succ-title{font-family:var(--serif);font-size:1.7rem;color:var(--text1)}
+.ob-succ-sub{font-size:.84rem;color:var(--text2);line-height:1.7;max-width:340px}
+.ob-succ-details{background:rgba(24,168,107,.06);border:1px solid rgba(24,168,107,.15);border-radius:12px;padding:14px 18px;width:100%;text-align:left;display:flex;flex-direction:column;gap:7px}
+.ob-sd{display:flex;justify-content:space-between;font-size:.78rem;font-family:var(--mono)}
+.ob-sd-k{color:var(--text3)}.ob-sd-v{color:var(--accent3)}
+
+/* ══════════════════════════════════════
+   DASHBOARD APP
+══════════════════════════════════════ */
+#page-dashboard{display:none;background:var(--d1)}
+#page-dashboard.active{display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.db-sidebar{width:220px;flex-shrink:0;background:var(--d1);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:100;overflow-y:auto}
+.db-sidebar-top{padding:18px 18px 10px;border-bottom:1px solid var(--border);margin-bottom:8px}
+.db-logo{font-family:var(--serif);font-size:1.2rem;color:var(--text1);display:flex;align-items:center;gap:7px}
+.db-logo-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+.db-company{font-family:var(--mono);font-size:.6rem;color:var(--text3);margin-top:4px;padding-left:14px}
+.db-nav{flex:1;padding:4px 10px}
+.db-nav-section{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);padding:14px 8px 6px;margin-top:4px}
+.db-nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:all .2s;margin-bottom:1px;color:var(--text2);font-size:.83rem;font-weight:500}
+.db-nav-item:hover{background:rgba(255,255,255,.05);color:var(--text1)}
+.db-nav-item.active{background:rgba(232,69,26,.12);color:var(--accent)}
+.db-nav-item .ni-icon{width:18px;text-align:center;font-size:.9rem;flex-shrink:0}
+.db-nav-item .ni-badge{margin-left:auto;background:var(--accent);color:#fff;font-family:var(--mono);font-size:.55rem;padding:2px 5px;border-radius:4px}
+.db-sidebar-bottom{padding:12px;border-top:1px solid var(--border)}
+.db-user{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;background:rgba(255,255,255,.04);cursor:pointer}
+.db-user-avatar{width:30px;height:30px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#fff;flex-shrink:0}
+.db-user-name{font-size:.78rem;font-weight:600;color:var(--text1)}
+.db-user-role{font-family:var(--mono);font-size:.6rem;color:var(--text3)}
+
+/* MAIN AREA */
+.db-main{flex:1;margin-left:220px;display:flex;flex-direction:column;min-height:100vh}
+.db-topbar{height:56px;background:var(--d1);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;position:sticky;top:0;z-index:90;flex-shrink:0}
+.db-topbar-title{font-family:var(--serif);font-size:1.1rem;color:var(--text1);flex:1;letter-spacing:-.01em}
+.db-topbar-search{flex:1;max-width:280px;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:7px 12px}
+.db-search-input{background:transparent;border:none;outline:none;font-size:.82rem;font-family:var(--sans);color:var(--text1);width:100%}
+.db-search-input::placeholder{color:var(--text3)}
+.db-topbar-right{display:flex;align-items:center;gap:10px}
+.db-top-btn{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;color:var(--text2);transition:all .2s}
+.db-top-btn:hover{background:rgba(255,255,255,.06);color:var(--text1)}
+.db-notif-dot{position:relative}
+.db-notif-dot::after{content:'';position:absolute;top:4px;right:4px;width:6px;height:6px;background:var(--accent);border-radius:50%;border:1.5px solid var(--d1)}
+.db-content{flex:1;padding:24px 28px;overflow-y:auto}
+
+/* MODULE PAGES */
+.mod-page{display:none}
+.mod-page.active{display:block}
+
+/* OVERVIEW */
+.ov-kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+.kpi-card{background:var(--d2);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;overflow:hidden;transition:all .3s}
+.kpi-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.kpi-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi-accent1::after{background:var(--accent)}
+.kpi-accent2::after{background:var(--accent2)}
+.kpi-accent3::after{background:var(--accent3)}
+.kpi-accent4::after{background:var(--gold)}
+.kpi-accent5::after{background:#a855f7}
+.kpi-lbl{font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:7px}
+.kpi-val{font-family:var(--serif);font-size:1.85rem;letter-spacing:-.03em;color:var(--text1);line-height:1}
+.kpi-chg{font-size:.72rem;margin-top:5px;display:flex;align-items:center;gap:4px}
+.kpi-chg.up{color:var(--accent3)}.kpi-chg.dn{color:var(--accent)}
+.kpi-spark{margin-top:10px}
+
+.ov-row{display:grid;gap:12px;margin-bottom:12px}
+.ov-row-3{grid-template-columns:1.6fr 1fr 1fr}
+.ov-row-2{grid-template-columns:1fr 1fr}
+.ov-row-4{grid-template-columns:repeat(4,1fr)}
+
+.db-card{background:var(--d2);border:1px solid var(--border);border-radius:12px;padding:18px}
+.db-card-title{font-size:.82rem;font-weight:700;color:var(--text1);margin-bottom:4px;display:flex;align-items:center;justify-content:space-between}
+.db-card-sub{font-family:var(--mono);font-size:.6rem;color:var(--text3);margin-bottom:14px}
+.db-card-tag{font-family:var(--mono);font-size:.58rem;padding:3px 8px;border-radius:5px}
+.tag-live{background:rgba(24,168,107,.12);color:var(--accent3)}
+.tag-warn{background:rgba(201,168,76,.12);color:var(--gold)}
+.tag-alert{background:rgba(232,69,26,.12);color:var(--accent)}
+
+/* Bar chart */
+.chart-bars{display:flex;align-items:flex-end;gap:5px;padding:8px 0 4px}
+.chart-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.chart-bar-val{font-family:var(--mono);font-size:.55rem;color:var(--text3)}
+.chart-bar{width:100%;border-radius:3px 3px 0 0;transition:height 1s cubic-bezier(.23,1,.32,1);min-height:3px;position:relative;cursor:pointer}
+.chart-bar:hover{opacity:.8;filter:brightness(1.2)}
+.chart-bar-lbl{font-family:var(--mono);font-size:.55rem;color:var(--text3)}
+
+/* Line chart SVG */
+.line-chart-wrap{position:relative}
+.chart-legend{display:flex;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.cl-item{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.6rem;color:var(--text3)}
+.cl-dot{width:7px;height:7px;border-radius:50%}
+
+/* Donut */
+.donut-wrap-db{display:flex;align-items:center;gap:20px}
+.donut-leg-db{display:flex;flex-direction:column;gap:9px;flex:1}
+.dl-row{display:flex;align-items:center;gap:8px;font-size:.76rem;color:var(--text2)}
+.dl-dot-db{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dl-val-db{margin-left:auto;font-family:var(--mono);font-size:.7rem;color:var(--text3)}
+
+/* Table */
+.db-table{width:100%;border-collapse:collapse}
+.db-table th{font-family:var(--mono);font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);padding:8px 10px;border-bottom:1px solid var(--border);text-align:left;font-weight:500}
+.db-table td{padding:10px 10px;border-bottom:1px solid rgba(255,255,255,.035);font-size:.78rem;color:var(--text2);vertical-align:middle}
+.db-table tr:last-child td{border-bottom:none}
+.db-table tr:hover td{background:rgba(255,255,255,.02);color:var(--text1)}
+.db-badge{padding:2px 8px;border-radius:5px;font-family:var(--mono);font-size:.6rem;font-weight:600;display:inline-block}
+.b-g{background:rgba(24,168,107,.12);color:var(--accent3)}
+.b-a{background:rgba(201,168,76,.12);color:var(--gold)}
+.b-r{background:rgba(232,69,26,.12);color:var(--accent)}
+.b-b{background:rgba(26,110,232,.12);color:var(--accent2)}
+.b-p{background:rgba(168,85,247,.12);color:#a855f7}
+
+/* Progress bar */
+.prog-bar-wrap{height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.prog-bar-fill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.23,1,.32,1)}
+
+/* Alert cards */
+.alert-list{display:flex;flex-direction:column;gap:8px}
+.alert-item{display:flex;align-items:flex-start;gap:12px;padding:12px;background:rgba(255,255,255,.025);border-radius:9px;border:1px solid var(--border)}
+.alert-icon{font-size:1rem;flex-shrink:0;margin-top:1px}
+.alert-title{font-size:.8rem;font-weight:600;color:var(--text1);margin-bottom:3px}
+.alert-body{font-size:.73rem;color:var(--text3);line-height:1.5}
+.alert-time{font-family:var(--mono);font-size:.6rem;color:var(--text3);margin-top:4px}
+
+/* Machine grid */
+.machine-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.machine-card{background:var(--d3);border-radius:10px;padding:12px;border:1px solid transparent;cursor:pointer;transition:all .3s}
+.machine-card:hover{transform:translateY(-2px)}
+.machine-card.run{border-color:rgba(24,168,107,.2);background:rgba(24,168,107,.04)}
+.machine-card.idle{border-color:rgba(201,168,76,.2);background:rgba(201,168,76,.04)}
+.machine-card.alert{border-color:rgba(232,69,26,.25);background:rgba(232,69,26,.05)}
+.mc-icon{font-size:1.3rem;margin-bottom:6px}
+.mc-name{font-family:var(--mono);font-size:.6rem;color:var(--text3);margin-bottom:4px}
+.mc-status{font-family:var(--mono);font-size:.65rem;font-weight:700}
+.machine-card.run .mc-status{color:var(--accent3)}
+.machine-card.idle .mc-status{color:var(--gold)}
+.machine-card.alert .mc-status{color:var(--accent)}
+.mc-util{margin-top:7px;height:3px;background:rgba(255,255,255,.06);border-radius:2px}
+.mc-util-fill{height:100%;border-radius:2px;transition:width 1s}
+.machine-card.run .mc-util-fill{background:var(--accent3)}
+.machine-card.idle .mc-util-fill{background:var(--gold)}
+.machine-card.alert .mc-util-fill{background:var(--accent)}
+
+/* Finance page specific */
+.fin-summary-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.fin-s-card{background:var(--d2);border:1px solid var(--border);border-radius:12px;padding:18px}
+.fsc-lbl{font-family:var(--mono);font-size:.58rem;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.fsc-val{font-family:var(--serif);font-size:2rem;letter-spacing:-.03em;color:var(--text1)}
+.fsc-chg{font-size:.72rem;margin-top:5px}
+
+/* Gauge */
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;gap:6px}
+.gauge-svg{display:block}
+.gauge-val{font-family:var(--serif);font-size:1.4rem;color:var(--text1);text-align:center}
+.gauge-lbl{font-family:var(--mono);font-size:.6rem;color:var(--text3);text-align:center;text-transform:uppercase}
+
+/* Simulation page */
+.sim-controls{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.sim-ctrl-btn{padding:7px 16px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;color:var(--text1);font-size:.78rem;font-family:var(--sans);cursor:pointer;transition:all .2s}
+.sim-ctrl-btn:hover{background:rgba(255,255,255,.09);border-color:var(--border2)}
+.sim-ctrl-btn.run{background:rgba(24,168,107,.12);border-color:rgba(24,168,107,.3);color:var(--accent3)}
+.sim-ctrl-btn.stop{background:rgba(232,69,26,.1);border-color:rgba(232,69,26,.3);color:var(--accent)}
+.sim-scenario-select{padding:7px 12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;color:var(--text1);font-size:.78rem;font-family:var(--sans);outline:none;cursor:pointer}
+.sim-scenario-select option{background:var(--d2)}
+
+/* Supply chain page */
+.sc-pipeline{display:flex;align-items:center;margin:18px 0;gap:0}
+.sc-node{text-align:center;flex:0 0 80px}
+.sc-bubble{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin:0 auto 8px;border:2px solid transparent;transition:all .4s;cursor:pointer}
+.sc-bubble:hover{transform:scale(1.1)}
+.sc-node-lbl{font-family:var(--mono);font-size:.58rem;color:var(--text3);text-transform:uppercase}
+.sc-connector{flex:1;height:2px;position:relative;margin-top:-28px}
+.sc-conn-fill{height:2px;background:rgba(255,255,255,.08)}
+.sc-conn-dot{width:8px;height:8px;border-radius:50%;position:absolute;top:-3px;left:0;animation:flow-dot 2.5s linear infinite}
+@keyframes flow-dot{from{left:0}to{left:calc(100% - 8px)}}
+
+/* Workforce page */
+.wf-dept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.wf-dept{background:var(--d2);border:1px solid var(--border);border-radius:12px;padding:16px}
+.wf-dept-name{font-size:.85rem;font-weight:700;color:var(--text1);margin-bottom:4px}
+.wf-dept-count{font-family:var(--serif);font-size:1.6rem;color:var(--text1);margin-bottom:4px}
+.wf-dept-lbl{font-family:var(--mono);font-size:.6rem;color:var(--text3)}
+
+/* Quality page */
+.qc-gauge-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+
+/* Responsive */
+@media(max-width:1200px){.ov-kpi-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:960px){.db-sidebar{width:180px}.db-main{margin-left:180px}.ov-kpi-row{grid-template-columns:repeat(2,1fr)}.ov-row-3{grid-template-columns:1fr}.ov-row-4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.ln-links{display:none}.lh-right{display:none}.ln-hero{grid-template-columns:1fr}.db-sidebar{display:none}.db-main{margin-left:0}}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="cur2"></div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 1: LANDING
+══════════════════════════════════════════ -->
+<div id="page-landing" class="page active">
+  <nav class="ln-nav">
+    <div class="ln-logo"><span class="ln-logo-dot"></span>AXON ERP</div>
+    <div class="ln-links">
+      <a href="#">Manufacturing</a><a href="#">Finance</a><a href="#">Simulation</a>
+      <a href="#">Supply Chain</a><a href="#">AI</a><a href="#">Pricing</a>
+    </div>
+    <div class="ln-btns">
+      <button class="btn btn-ghost" onclick="showOnboard()">Sign In</button>
+      <button class="btn btn-accent" onclick="showOnboard()">Start Free Trial</button>
+    </div>
+  </nav>
+
+  <div class="ln-hero">
+    <div>
+      <div class="lh-eyebrow" id="lh-ey">Manufacturing · Finance · Simulation — Unified</div>
+      <h1 class="lh-h1" id="lh-h1">The ERP that<br>thinks like<br><span class="red it">you do.</span></h1>
+      <p class="lh-sub" id="lh-sub">AXON unifies your entire manufacturing operation — shop floor machines, financial flows, and production simulation — into one AI-native intelligence platform.</p>
+      <div class="lh-actions" id="lh-act">
+        <button class="lh-cta" onclick="showOnboard()">Start Free Trial — Free 14 Days</button>
+        <button class="lh-ghost">Watch Demo ↗</button>
+      </div>
+      <div class="lh-stats" id="lh-st">
+        <div class="lhs-item"><div class="num" id="lhs1">0</div><div class="lbl">Enterprises</div></div>
+        <div class="lhs-item"><div class="num" id="lhs2">0%</div><div class="lbl">Avg OEE Lift</div></div>
+        <div class="lhs-item"><div class="num" id="lhs3">0ms</div><div class="lbl">Avg Latency</div></div>
+      </div>
+    </div>
+    <div class="lh-right" id="lh-right">
+      <div class="lh-screen">
+        <div class="scr-bar">
+          <div class="scr-dot" style="background:#ff5f57"></div>
+          <div class="scr-dot" style="background:#febc2e"></div>
+          <div class="scr-dot" style="background:#28c840"></div>
+          <div class="scr-title">AXON ERP — Command Center</div>
+        </div>
+        <div class="scr-body">
+          <div class="scr-kpis">
+            <div class="scr-kpi"><div class="scr-kpi-lbl">Revenue MTD</div><div class="scr-kpi-val">$4.2M</div><div class="scr-kpi-chg up">↑ 8.4%</div></div>
+            <div class="scr-kpi"><div class="scr-kpi-lbl">OEE Score</div><div class="scr-kpi-val" id="pvOee">89%</div><div class="scr-kpi-chg up">↑ On target</div></div>
+            <div class="scr-kpi"><div class="scr-kpi-lbl">Units/Hr</div><div class="scr-kpi-val" id="pvUnits">247</div><div class="scr-kpi-chg up">↑ 4.2%</div></div>
+            <div class="scr-kpi"><div class="scr-kpi-lbl">Defect PPM</div><div class="scr-kpi-val" id="pvDefect">38</div><div class="scr-kpi-chg up">↓ 12%</div></div>
+          </div>
+          <div class="scr-charts">
+            <div class="scr-chart-box">
+              <div class="scr-ct">Hourly Throughput</div>
+              <div class="mini-bars" id="pvBars"></div>
+            </div>
+            <div class="scr-chart-box">
+              <div class="scr-ct">Cost Structure</div>
+              <svg width="100%" height="70" id="pvDonut" viewBox="0 0 100 70">
+                <circle cx="35" cy="35" r="25" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="10"/>
+                <circle id="pvDa" cx="35" cy="35" r="25" fill="none" stroke="#e8451a" stroke-width="10" stroke-dasharray="0 157" stroke-dashoffset="0" transform="rotate(-90 35 35)"/>
+                <circle id="pvDb" cx="35" cy="35" r="25" fill="none" stroke="#1a6ee8" stroke-width="10" stroke-dasharray="0 157" transform="rotate(-90 35 35)"/>
+                <circle id="pvDc" cx="35" cy="35" r="25" fill="none" stroke="#18a86b" stroke-width="10" stroke-dasharray="0 157" transform="rotate(-90 35 35)"/>
+                <text x="35" y="32" text-anchor="middle" fill="white" font-size="6" font-family="Instrument Serif,serif">$8.4M</text>
+                <text x="35" y="41" text-anchor="middle" fill="#606070" font-size="4" font-family="Geist Mono,monospace">OPEX</text>
+                <text x="72" y="20" font-size="5" font-family="Geist Mono,monospace" fill="#e8451a">■ Labor 33%</text>
+                <text x="72" y="32" font-size="5" font-family="Geist Mono,monospace" fill="#1a6ee8">■ Mats 37%</text>
+                <text x="72" y="44" font-size="5" font-family="Geist Mono,monospace" fill="#18a86b">■ OH 30%</text>
+              </svg>
+            </div>
+          </div>
+          <div class="scr-table">
+            <div class="str head"><div>Work Order</div><div>Product</div><div>Status</div></div>
+            <div class="str"><div style="color:var(--text1)">WO-2841</div><div>Housing A-12</div><div><span class="stbadge sb-g">Running</span></div></div>
+            <div class="str"><div style="color:var(--text1)">WO-2842</div><div>Valve Body</div><div><span class="stbadge sb-a">Queued</span></div></div>
+            <div class="str"><div style="color:var(--text1)">WO-2843</div><div>Bracket X9</div><div><span class="stbadge sb-r">Alert</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ticker-wrap">
+    <div class="ticker-inner" id="lndTicker">
+      <div class="tick-item">AI-Powered Scheduling</div><div class="tick-item">Digital Twin Simulation</div><div class="tick-item">Real-Time MES Integration</div><div class="tick-item">Predictive Maintenance</div><div class="tick-item">Multi-Entity Finance</div><div class="tick-item">Blockchain Traceability</div><div class="tick-item">Monte Carlo Planning</div><div class="tick-item">ISO 9001 Workflows</div><div class="tick-item">99.9% Uptime SLA</div><div class="tick-item">AI-Powered Scheduling</div><div class="tick-item">Digital Twin Simulation</div><div class="tick-item">Real-Time MES Integration</div><div class="tick-item">Predictive Maintenance</div><div class="tick-item">Multi-Entity Finance</div><div class="tick-item">Blockchain Traceability</div><div class="tick-item">Monte Carlo Planning</div><div class="tick-item">ISO 9001 Workflows</div><div class="tick-item">99.9% Uptime SLA</div>
+    </div>
+  </div>
+
+  <div class="ln-features">
+    <div class="feat-head">
+      <div class="feat-tag">Core Modules</div>
+      <h2 class="feat-h2">Every system. One platform.</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="fc-icon" style="background:rgba(232,69,26,.1)">⚙️</div><div class="fc-tag" style="color:var(--accent)">Manufacturing</div><div class="fc-title">Intelligent Production Orchestration</div><div class="fc-body">AI-driven scheduling, BOM management, work-order automation, and real-time OEE. Native IIoT connectivity to FANUC, Siemens, Rockwell.</div><div class="fc-stat"><span class="fc-stat-val" style="color:var(--accent)">↓68%</span><span class="fc-stat-lbl">Downtime</span></div></div>
+      <div class="feat-card"><div class="fc-icon" style="background:rgba(26,110,232,.1)">💹</div><div class="fc-tag" style="color:var(--accent2)">Finance</div><div class="fc-title">Real-Time Financial Intelligence</div><div class="fc-body">Multi-entity GL, AP/AR, live P&L, cash-flow forecasting with AI anomaly detection. GAAP + IFRS 17 compliant out of the box.</div><div class="fc-stat"><span class="fc-stat-val" style="color:var(--accent2)">Real-time</span><span class="fc-stat-lbl">P&L Updates</span></div></div>
+      <div class="feat-card"><div class="fc-icon" style="background:rgba(24,168,107,.1)">🔬</div><div class="fc-tag" style="color:var(--accent3)">Simulation</div><div class="fc-title">Digital Twin Production Lab</div><div class="fc-body">Mirror your factory in real-time. Run 10,000+ Monte Carlo scenarios per second to stress-test plans without touching live ops.</div><div class="fc-stat"><span class="fc-stat-val" style="color:var(--accent3)">10K+</span><span class="fc-stat-lbl">Scenarios/sec</span></div></div>
+      <div class="feat-card"><div class="fc-icon" style="background:rgba(201,168,76,.1)">📦</div><div class="fc-tag" style="color:var(--gold)">Supply Chain</div><div class="fc-title">Smart Supply Chain Intelligence</div><div class="fc-body">Automated procurement, blockchain traceability, multi-tier supplier visibility, and ML demand forecasting 30–180 days out.</div><div class="fc-stat"><span class="fc-stat-val" style="color:var(--gold)">↓31%</span><span class="fc-stat-lbl">Inventory Cost</span></div></div>
+      <div class="feat-card"><div class="fc-icon" style="background:rgba(168,85,247,.1)">👥</div><div class="fc-tag" style="color:#a855f7">Workforce</div><div class="fc-title">Human Capital Management</div><div class="fc-body">AI-assisted shift planning, skills matrix, payroll automation, and real-time labor cost tracking integrated with production targets.</div><div class="fc-stat"><span class="fc-stat-val" style="color:#a855f7">98.2%</span><span class="fc-stat-lbl">Payroll Accuracy</span></div></div>
+      <div class="feat-card"><div class="fc-icon" style="background:rgba(232,69,26,.08)">🛡️</div><div class="fc-tag" style="color:var(--accent)">Quality</div><div class="fc-title">Quality & Compliance Hub</div><div class="fc-body">ISO 9001/AS9100 workflow automation, real-time SPC charting, NCR tracking, and automated CAPA generation with full audit trails.</div><div class="fc-stat"><span class="fc-stat-val" style="color:var(--accent)">↓89%</span><span class="fc-stat-lbl">Defect Rate</span></div></div>
+    </div>
+  </div>
+
+  <div class="ln-cta">
+    <div class="lcta-inner">
+      <div class="lcta-tag">Get Started Today</div>
+      <h2 class="lcta-h2">14 days free.<br>Live in 48 hours.</h2>
+      <p class="lcta-sub">No credit card. No setup fees. Your workspace is provisioned instantly with industry-specific demo data.</p>
+      <div class="lcta-form">
+        <input class="lcta-input" id="lcta-email" type="email" placeholder="your@company.com">
+        <button class="lcta-btn" onclick="quickStartTrial()">Start Free Trial →</button>
+      </div>
+      <div class="lcta-note">✓ No credit card &nbsp;·&nbsp; ✓ SOC 2 Type II &nbsp;·&nbsp; ✓ Cancel anytime</div>
+    </div>
+  </div>
+
+  <footer class="ln-footer">
+    <div class="lf-logo">AXON ERP</div>
+    <div class="lf-copy">© 2026 AXON Systems Inc.</div>
+    <div class="lf-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Security</a><a href="#">Docs</a></div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 2: ONBOARDING
+══════════════════════════════════════════ -->
+<div id="page-onboard" class="page">
+  <div class="ob-wrap">
+    <div class="ob-logo"><span class="ob-logo-dot"></span>AXON ERP</div>
+    <div class="ob-card">
+      <div class="ob-progress"><div class="ob-prog-bar" id="obProg" style="width:33%"></div></div>
+      <div class="ob-steps-row" id="obStepsRow">
+        <div class="obs-item"><div class="obs-num active" id="osn1">01</div><div class="obs-lbl active" id="osl1">Account</div></div>
+        <div class="obs-line" id="osl_1"></div>
+        <div class="obs-item"><div class="obs-num" id="osn2">02</div><div class="obs-lbl" id="osl2">Company</div></div>
+        <div class="obs-line" id="osl_2"></div>
+        <div class="obs-item"><div class="obs-num" id="osn3">03</div><div class="obs-lbl" id="osl3">Modules</div></div>
+      </div>
+      <div class="ob-body">
+        <!-- Step 1 -->
+        <div id="obp1">
+          <div class="ob-title">Create your account</div>
+          <div class="ob-sub">14-day free trial · No credit card required</div>
+          <div class="ob-fields">
+            <div class="ob-row">
+              <div class="ob-field"><label class="ob-label">First Name</label><input class="ob-input" id="ob_fn" placeholder="Jane"><span class="ob-err" id="oe_fn">Required</span></div>
+              <div class="ob-field"><label class="ob-label">Last Name</label><input class="ob-input" id="ob_ln" placeholder="Doe"><span class="ob-err" id="oe_ln">Required</span></div>
+            </div>
+            <div class="ob-field"><label class="ob-label">Work Email</label><input class="ob-input" id="ob_em" type="email" placeholder="jane@company.com"><span class="ob-err" id="oe_em">Valid email required</span></div>
+            <div class="ob-field">
+              <label class="ob-label">Password</label>
+              <input class="ob-input" id="ob_pw" type="password" placeholder="Min. 8 characters">
+              <span class="ob-err" id="oe_pw">Min. 8 characters required</span>
+              <div class="pw-row"><div class="pw-b" id="pw1"></div><div class="pw-b" id="pw2"></div><div class="pw-b" id="pw3"></div><div class="pw-b" id="pw4"></div></div>
+              <div class="pw-hint" id="pwh">Enter a password</div>
+            </div>
+          </div>
+          <div class="ob-foot"><button class="ob-next" id="on1">Continue →</button></div>
+        </div>
+        <!-- Step 2 -->
+        <div id="obp2" style="display:none">
+          <div class="ob-title">About your company</div>
+          <div class="ob-sub">We'll configure AXON for your industry and scale.</div>
+          <div class="ob-fields">
+            <div class="ob-field"><label class="ob-label">Company Name</label><input class="ob-input" id="ob_co" placeholder="Acme Manufacturing Inc."><span class="ob-err" id="oe_co">Required</span></div>
+            <div class="ob-row">
+              <div class="ob-field"><label class="ob-label">Industry</label><select class="ob-input ob-select" id="ob_ind"><option value="">Select…</option><option>Automotive</option><option>Aerospace & Defense</option><option>Electronics</option><option>Food & Beverage</option><option>Pharmaceuticals</option><option>Industrial Equipment</option><option>Other Manufacturing</option></select><span class="ob-err" id="oe_ind">Required</span></div>
+              <div class="ob-field"><label class="ob-label">Company Size</label><select class="ob-input ob-select" id="ob_sz"><option value="">Select…</option><option>1–50</option><option>51–200</option><option>201–1,000</option><option>1,001–5,000</option><option>5,000+</option></select><span class="ob-err" id="oe_sz">Required</span></div>
+            </div>
+            <div><div class="ob-label" style="margin-bottom:8px">Select Plan</div>
+            <div class="plan-grid-ob">
+              <div class="plan-ob" data-plan="starter" onclick="selPlanOb(this)"><div class="plan-ob-name">Starter</div><div class="plan-ob-price">Free<span>/14d</span></div><div class="plan-ob-desc">5 users</div><div class="plan-ob-chk">✓ Selected</div></div>
+              <div class="plan-ob sel" data-plan="growth" onclick="selPlanOb(this)"><div class="plan-ob-name">Growth</div><div class="plan-ob-price">$299<span>/mo</span></div><div class="plan-ob-desc">25 users + AI</div><div class="plan-ob-chk">✓ Selected</div></div>
+              <div class="plan-ob" data-plan="enterprise" onclick="selPlanOb(this)"><div class="plan-ob-name">Enterprise</div><div class="plan-ob-price">Custom</div><div class="plan-ob-desc">Unlimited</div><div class="plan-ob-chk">✓ Selected</div></div>
+            </div></div>
+          </div>
+          <div class="ob-foot"><button class="ob-back" id="ob2">← Back</button><button class="ob-next" id="on2">Continue →</button></div>
+        </div>
+        <!-- Step 3 -->
+        <div id="obp3" style="display:none">
+          <div class="ob-title">Choose your modules</div>
+          <div class="ob-sub">Only these dashboards will appear. Add more anytime.</div>
+          <div class="mod-grid-ob" id="modGrid">
+            <div class="mod-ob sel" data-mod="manufacturing" onclick="togModOb(this)"><div class="mod-ob-cb">✓</div><div class="mod-ob-label">⚙️ Manufacturing</div></div>
+            <div class="mod-ob sel" data-mod="finance" onclick="togModOb(this)"><div class="mod-ob-cb">✓</div><div class="mod-ob-label">💹 Finance</div></div>
+            <div class="mod-ob sel" data-mod="simulation" onclick="togModOb(this)"><div class="mod-ob-cb">✓</div><div class="mod-ob-label">🔬 Simulation</div></div>
+            <div class="mod-ob" data-mod="supply" onclick="togModOb(this)"><div class="mod-ob-cb"></div><div class="mod-ob-label">📦 Supply Chain</div></div>
+            <div class="mod-ob" data-mod="workforce" onclick="togModOb(this)"><div class="mod-ob-cb"></div><div class="mod-ob-label">👥 Workforce</div></div>
+            <div class="mod-ob" data-mod="quality" onclick="togModOb(this)"><div class="mod-ob-cb"></div><div class="mod-ob-label">🛡️ Quality & QC</div></div>
+          </div>
+          <div class="ob-foot"><button class="ob-back" id="ob3">← Back</button><button class="ob-next" id="on3">Launch My AXON 🚀</button></div>
+        </div>
+        <!-- Loading -->
+        <div class="ob-loading" id="obLoading">
+          <div class="ob-spin"></div>
+          <div class="ob-spin-title">Building your workspace…</div>
+          <div class="ob-steps-load">
+            <div class="ob-sl" id="osl__1">→ Provisioning cloud environment</div>
+            <div class="ob-sl" id="osl__2">→ Installing selected modules</div>
+            <div class="ob-sl" id="osl__3">→ Seeding industry demo data</div>
+            <div class="ob-sl" id="osl__4">→ Configuring AI pipelines</div>
+            <div class="ob-sl" id="osl__5">→ Sending onboarding email</div>
+          </div>
+        </div>
+        <!-- Success -->
+        <div class="ob-success" id="obSuccess">
+          <div class="ob-succ-ring">✓</div>
+          <div class="ob-succ-title">You're in.</div>
+          <div class="ob-succ-sub">Your AXON workspace is live. Opening your dashboard now…</div>
+          <div class="ob-succ-details" id="obSuccDetails"></div>
+          <button class="ob-next" style="width:100%;margin-top:4px" id="launchDash">Open AXON Dashboard →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 3: DASHBOARD APP
+══════════════════════════════════════════ -->
+<div id="page-dashboard" class="page">
+  <!-- SIDEBAR -->
+  <aside class="db-sidebar">
+    <div class="db-sidebar-top">
+      <div class="db-logo"><span class="db-logo-dot"></span>AXON ERP</div>
+      <div class="db-company" id="db-company-name">Acme Manufacturing</div>
+    </div>
+    <nav class="db-nav">
+      <div class="db-nav-section">Overview</div>
+      <div class="db-nav-item active" data-page="overview" onclick="navTo(this)"><span class="ni-icon">🏠</span>Command Center</div>
+      <div class="db-nav-item" data-page="alerts" onclick="navTo(this)"><span class="ni-icon">🔔</span>Alerts<span class="ni-badge" id="alertCount">3</span></div>
+
+      <div class="db-nav-section" id="nav-manufacturing" style="display:none">Manufacturing</div>
+      <div class="db-nav-item" data-page="manufacturing" onclick="navTo(this)" id="nav-manufacturing-item" style="display:none"><span class="ni-icon">⚙️</span>Shop Floor</div>
+      <div class="db-nav-item" data-page="workorders" onclick="navTo(this)" id="nav-workorders-item" style="display:none"><span class="ni-icon">📋</span>Work Orders</div>
+
+      <div class="db-nav-section" id="nav-finance-sec" style="display:none">Finance</div>
+      <div class="db-nav-item" data-page="finance" onclick="navTo(this)" id="nav-finance-item" style="display:none"><span class="ni-icon">💹</span>Finance</div>
+      <div class="db-nav-item" data-page="cashflow" onclick="navTo(this)" id="nav-cashflow-item" style="display:none"><span class="ni-icon">💰</span>Cash Flow</div>
+
+      <div class="db-nav-section" id="nav-simulation-sec" style="display:none">Simulation</div>
+      <div class="db-nav-item" data-page="simulation" onclick="navTo(this)" id="nav-simulation-item" style="display:none"><span class="ni-icon">🔬</span>Simulation Lab</div>
+
+      <div class="db-nav-section" id="nav-supply-sec" style="display:none">Supply Chain</div>
+      <div class="db-nav-item" data-page="supply" onclick="navTo(this)" id="nav-supply-item" style="display:none"><span class="ni-icon">📦</span>Supply Chain</div>
+
+      <div class="db-nav-section" id="nav-workforce-sec" style="display:none">Workforce</div>
+      <div class="db-nav-item" data-page="workforce" onclick="navTo(this)" id="nav-workforce-item" style="display:none"><span class="ni-icon">👥</span>Workforce</div>
+
+      <div class="db-nav-section" id="nav-quality-sec" style="display:none">Quality</div>
+      <div class="db-nav-item" data-page="quality" onclick="navTo(this)" id="nav-quality-item" style="display:none"><span class="ni-icon">🛡️</span>Quality & QC</div>
+
+      <div class="db-nav-section">System</div>
+      <div class="db-nav-item" data-page="settings" onclick="navTo(this)"><span class="ni-icon">⚙️</span>Settings</div>
+    </nav>
+    <div class="db-sidebar-bottom">
+      <div class="db-user">
+        <div class="db-user-avatar" id="db-avatar">JD</div>
+        <div><div class="db-user-name" id="db-uname">Jane Doe</div><div class="db-user-role">Admin</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="db-main">
+    <div class="db-topbar">
+      <div class="db-topbar-title" id="dbPageTitle">Command Center</div>
+      <div class="db-topbar-search"><span style="font-size:.85rem;color:var(--text3)">🔍</span><input class="db-search-input" placeholder="Search orders, products, reports…"></div>
+      <div class="db-topbar-right">
+        <button class="db-top-btn db-notif-dot" title="Notifications">🔔</button>
+        <button class="db-top-btn" title="Calendar">📅</button>
+        <button class="db-top-btn" title="Help">❓</button>
+        <button class="btn btn-accent" style="font-size:.75rem;padding:7px 16px" onclick="showOnboard()">+ Add Module</button>
+      </div>
+    </div>
+    <div class="db-content">
+
+      <!-- ── OVERVIEW ── -->
+      <div class="mod-page active" id="pg-overview">
+        <div class="ov-kpi-row" id="ovKpis">
+          <div class="kpi-card kpi-accent1"><div class="kpi-lbl">Revenue MTD</div><div class="kpi-val" id="kv-rev">$4.2M</div><div class="kpi-chg up">↑ 8.4% vs last month</div></div>
+          <div class="kpi-card kpi-accent2"><div class="kpi-lbl">OEE Score</div><div class="kpi-val" id="kv-oee">89.3%</div><div class="kpi-chg up">↑ Above 85% target</div></div>
+          <div class="kpi-card kpi-accent3"><div class="kpi-lbl">Units/Hour</div><div class="kpi-val" id="kv-units">247</div><div class="kpi-chg up">↑ 4.2% vs yesterday</div></div>
+          <div class="kpi-card kpi-accent4"><div class="kpi-lbl">Gross Margin</div><div class="kpi-val" id="kv-margin">38.7%</div><div class="kpi-chg up">↑ +3.2pp YoY</div></div>
+          <div class="kpi-card kpi-accent5"><div class="kpi-lbl">Defect PPM</div><div class="kpi-val" id="kv-defect">38</div><div class="kpi-chg up">↓ 12% below SLA</div></div>
+        </div>
+        <div class="ov-row ov-row-3">
+          <div class="db-card">
+            <div class="db-card-title">Monthly Revenue vs Target <span class="db-card-tag tag-live">● Live</span></div>
+            <div class="db-card-sub">Last 12 months · All Plants</div>
+            <div class="chart-legend"><div class="cl-item"><div class="cl-dot" style="background:var(--accent2)"></div>Revenue</div><div class="cl-item"><div class="cl-dot" style="background:rgba(255,255,255,.15)"></div>Target</div></div>
+            <canvas id="revenueChart" height="130" style="width:100%"></canvas>
+          </div>
+          <div class="db-card">
+            <div class="db-card-title">Cost Breakdown</div>
+            <div class="db-card-sub">Current period · $8.4M total</div>
+            <div class="donut-wrap-db" style="margin-top:14px">
+              <svg width="100" height="100" viewBox="0 0 100 100" id="ovDonut">
+                <circle cx="50" cy="50" r="36" fill="none" stroke="rgba(255,255,255,.04)" stroke-width="16"/>
+                <circle id="ovDa" cx="50" cy="50" r="36" fill="none" stroke="#e8451a" stroke-width="16" stroke-dasharray="0 226" transform="rotate(-90 50 50)"/>
+                <circle id="ovDb" cx="50" cy="50" r="36" fill="none" stroke="#1a6ee8" stroke-width="16" stroke-dasharray="0 226" transform="rotate(-90 50 50)"/>
+                <circle id="ovDc" cx="50" cy="50" r="36" fill="none" stroke="#c9a84c" stroke-width="16" stroke-dasharray="0 226" transform="rotate(-90 50 50)"/>
+                <circle id="ovDd" cx="50" cy="50" r="36" fill="none" stroke="#18a86b" stroke-width="16" stroke-dasharray="0 226" transform="rotate(-90 50 50)"/>
+                <text x="50" y="46" text-anchor="middle" fill="white" font-family="Instrument Serif,serif" font-size="10">$8.4M</text>
+                <text x="50" y="57" text-anchor="middle" fill="#606070" font-family="Geist Mono,monospace" font-size="5.5">OPEX</text>
+              </svg>
+              <div class="donut-leg-db">
+                <div class="dl-row"><div class="dl-dot-db" style="background:#e8451a"></div>Labor<span class="dl-val-db">33%</span></div>
+                <div class="dl-row"><div class="dl-dot-db" style="background:#1a6ee8"></div>Materials<span class="dl-val-db">37%</span></div>
+                <div class="dl-row"><div class="dl-dot-db" style="background:#c9a84c"></div>Overhead<span class="dl-val-db">20%</span></div>
+                <div class="dl-row"><div class="dl-dot-db" style="background:#18a86b"></div>Logistics<span class="dl-val-db">10%</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-title">Active Alerts <span class="db-card-tag tag-alert">3 Critical</span></div>
+            <div class="db-card-sub">Requires attention</div>
+            <div class="alert-list" style="margin-top:10px">
+              <div class="alert-item"><span class="alert-icon">⚠️</span><div><div class="alert-title">PRESS-2 Vibration Anomaly</div><div class="alert-body">Bearing wear detected. Predicted failure in 48–72h.</div><div class="alert-time">2 min ago</div></div></div>
+              <div class="alert-item"><span class="alert-icon">📉</span><div><div class="alert-title">Material Cost Variance</div><div class="alert-body">Raw materials +$89K over budget this period.</div><div class="alert-time">18 min ago</div></div></div>
+              <div class="alert-item"><span class="alert-icon">📦</span><div><div class="alert-title">Low Stock: Steel Sheet A3</div><div class="alert-body">6 days remaining at current consumption rate.</div><div class="alert-time">1 hr ago</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="ov-row ov-row-2" style="margin-top:12px">
+          <div class="db-card">
+            <div class="db-card-title">Recent Work Orders</div>
+            <div class="db-card-sub">Last 24 hours · All lines</div>
+            <table class="db-table" style="margin-top:10px">
+              <thead><tr><th>Order #</th><th>Product</th><th>Qty</th><th>Line</th><th>Status</th><th>Progress</th></tr></thead>
+              <tbody>
+                <tr><td>WO-2841</td><td>Housing A-12</td><td>500</td><td>Line 1</td><td><span class="db-badge b-g">Running</span></td><td><div class="prog-bar-wrap" style="width:80px"><div class="prog-bar-fill" style="background:var(--accent3);width:74%"></div></div></td></tr>
+                <tr><td>WO-2842</td><td>Valve Body</td><td>240</td><td>Line 2</td><td><span class="db-badge b-a">Queued</span></td><td><div class="prog-bar-wrap" style="width:80px"><div class="prog-bar-fill" style="background:var(--gold);width:0%"></div></div></td></tr>
+                <tr><td>WO-2843</td><td>Bracket X9</td><td>1200</td><td>Line 3</td><td><span class="db-badge b-r">Alert</span></td><td><div class="prog-bar-wrap" style="width:80px"><div class="prog-bar-fill" style="background:var(--accent);width:32%"></div></div></td></tr>
+                <tr><td>WO-2840</td><td>Shaft Assy</td><td>80</td><td>Line 1</td><td><span class="db-badge b-b">Complete</span></td><td><div class="prog-bar-wrap" style="width:80px"><div class="prog-bar-fill" style="background:var(--accent2);width:100%"></div></div></td></tr>
+                <tr><td>WO-2839</td><td>Cover Plate</td><td>350</td><td>Line 4</td><td><span class="db-badge b-g">Running</span></td><td><div class="prog-bar-wrap" style="width:80px"><div class="prog-bar-fill" style="background:var(--accent3);width:58%"></div></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="db-card">
+            <div class="db-card-title">Hourly Throughput</div>
+            <div class="db-card-sub">Today · Units produced per hour</div>
+            <canvas id="throughputChart" height="160" style="width:100%;margin-top:10px"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── MANUFACTURING ── -->
+      <div class="mod-page" id="pg-manufacturing">
+        <div class="ov-row ov-row-4" style="margin-bottom:14px">
+          <div class="kpi-card kpi-accent2"><div class="kpi-lbl">Shift OEE</div><div class="kpi-val" id="mfg-oee">87.4%</div><div class="kpi-chg up">↑ On target</div></div>
+          <div class="kpi-card kpi-accent3"><div class="kpi-lbl">Units/Hr</div><div class="kpi-val" id="mfg-units">247</div><div class="kpi-chg up">↑ 4.2%</div></div>
+          <div class="kpi-card kpi-accent4"><div class="kpi-lbl">Active Jobs</div><div class="kpi-val">12</div><div class="kpi-chg up">3 completing today</div></div>
+          <div class="kpi-card kpi-accent1"><div class="kpi-lbl">Machine Alerts</div><div class="kpi-val" style="color:var(--accent)">1</div><div class="kpi-chg dn">PRESS-2 critical</div></div>
+        </div>
+        <div class="ov-row ov-row-2">
+          <div class="db-card">
+            <div class="db-card-title">Factory Floor — Plant A <span class="db-card-tag tag-live">● Live</span></div>
+            <div class="db-card-sub">8 machines · Click for details</div>
+            <div class="machine-grid" style="margin-top:14px" id="machineGrid">
+              <div class="machine-card run"><div class="mc-icon">⚙️</div><div class="mc-name">CNC-01</div><div class="mc-status">Running</div><div class="mc-util"><div class="mc-util-fill" style="width:87%"></div></div></div>
+              <div class="machine-card run"><div class="mc-icon">🔧</div><div class="mc-name">LATHE-A</div><div class="mc-status">Running</div><div class="mc-util"><div class="mc-util-fill" style="width:72%"></div></div></div>
+              <div class="machine-card alert"><div class="mc-icon">⚠️</div><div class="mc-name">PRESS-2</div><div class="mc-status">Alert</div><div class="mc-util"><div class="mc-util-fill" style="width:23%"></div></div></div>
+              <div class="machine-card idle"><div class="mc-icon">🏭</div><div class="mc-name">WELD-B</div><div class="mc-status">Idle</div><div class="mc-util"><div class="mc-util-fill" style="width:45%"></div></div></div>
+              <div class="machine-card run"><div class="mc-icon">🔩</div><div class="mc-name">DRILL-3</div><div class="mc-status">Running</div><div class="mc-util"><div class="mc-util-fill" style="width:94%"></div></div></div>
+              <div class="machine-card run"><div class="mc-icon">⚡</div><div class="mc-name">EDM-01</div><div class="mc-status">Running</div><div class="mc-util"><div class="mc-util-fill" style="width:78%"></div></div></div>
+              <div class="machine-card idle"><div class="mc-icon">🔬</div><div class="mc-name">CMM-A</div><div class="mc-status">Idle</div><div class="mc-util"><div class="mc-util-fill" style="width:30%"></div></div></div>
+              <div class="machine-card run"><div class="mc-icon">🤖</div><div class="mc-name">ROBOT-1</div><div class="mc-status">Running</div><div class="mc-util"><div class="mc-util-fill" style="width:91%"></div></div></div>
+            </div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-title">OEE Breakdown</div>
+            <div class="db-card-sub">Availability · Performance · Quality</div>
+            <div style="display:flex;flex-direction:column;gap:16px;margin-top:18px">
+              <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:5px"><span style="color:var(--text1);font-weight:600">Availability</span><span style="font-family:var(--mono);color:var(--accent3)">92.1%</span></div><div class="prog-bar-wrap"><div class="prog-bar-fill" style="background:var(--accent3);width:92.1%"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:5px"><span style="color:var(--text1);font-weight:600">Performance</span><span style="font-family:var(--mono);color:var(--accent2)">88.4%</span></div><div class="prog-bar-wrap"><div class="prog-bar-fill" style="background:var(--accent2);width:88.4%"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:5px"><span style="color:var(--text1);font-weight:600">Quality</span><span style="font-family:var(--mono);color:var(--gold)">95.7%</span></div><div class="prog-bar-wrap"><div class="prog-bar-fill" style="background:var(--gold);width:95.7%"></div></div></div>
+              <div style="margin-top:6px;padding-top:14px;border-top:1px solid var(--border)"><div style="display:flex;justify-content:space-between;font-size:.88rem;margin-bottom:5px"><span style="color:var(--text1);font-weight:700">Overall OEE</span><span style="font-family:var(--serif);font-size:1.3rem;color:var(--accent2)">87.4%</span></div><div class="prog-bar-wrap" style="height:7px"><div class="prog-bar-fill" style="background:linear-gradient(90deg,var(--accent2),var(--accent3));width:87.4%"></div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="db-card" style="margin-top:12px">
+          <div class="db-card-title">Work Order Queue</div>
+          <div class="db-card-sub">Active and scheduled · Click to manage</div>
+          <table class="db-table" style="margin-top:12px">
+            <thead><tr><th>Order #</th><th>Product</th><th>Qty Target</th><th>Qty Done</th><th>Machine</th><th>Operator</th><th>Start</th><th>ETA</th><th>Status</th><th>Progress</th></tr></thead>
+            <tbody>
+              <tr><td>WO-2841</td><td>Housing A-12</td><td>500</td><td>370</td><td>CNC-01</td><td>J. Smith</td><td>08:00</td><td>14:30</td><td><span class="db-badge b-g">Running</span></td><td><div class="prog-bar-wrap" style="width:100px"><div class="prog-bar-fill" style="background:var(--accent3);width:74%"></div></div></td></tr>
+              <tr><td>WO-2842</td><td>Valve Body</td><td>240</td><td>0</td><td>LATHE-A</td><td>M. Patel</td><td>14:30</td><td>18:00</td><td><span class="db-badge b-a">Queued</span></td><td><div class="prog-bar-wrap" style="width:100px"><div class="prog-bar-fill" style="background:var(--gold);width:0%"></div></div></td></tr>
+              <tr><td>WO-2843</td><td>Bracket X9</td><td>1200</td><td>384</td><td>PRESS-2</td><td>T. Chen</td><td>06:00</td><td>20:00</td><td><span class="db-badge b-r">Alert</span></td><td><div class="prog-bar-wrap" style="width:100px"><div class="prog-bar-fill" style="background:var(--accent);width:32%"></div></div></td></tr>
+              <tr><td>WO-2839</td><td>Cover Plate</td><td>350</td><td>203</td><td>DRILL-3</td><td>A. Kim</td><td>09:00</td><td>16:00</td><td><span class="db-badge b-g">Running</span></td><td><div class="prog-bar-wrap" style="width:100px"><div class="prog-bar-fill" style="background:var(--accent3);width:58%"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── FINANCE ── -->
+      <div class="mod-page" id="pg-finance">
+        <div class="fin-summary-row">
+          <div class="fin-s-card"><div class="fsc-lbl">Revenue YTD</div><div class="fsc-val">$28.4M</div><div class="fsc-chg up" style="color:var(--accent3)">↑ +8.4% vs prior year</div></div>
+          <div class="fin-s-card"><div class="fsc-lbl">Gross Margin</div><div class="fsc-val">38.7%</div><div class="fsc-chg up" style="color:var(--accent3)">↑ +3.2pp vs last year</div></div>
+          <div class="fin-s-card"><div class="fsc-lbl">Net Profit YTD</div><div class="fsc-val">$6.1M</div><div class="fsc-chg up" style="color:var(--accent3)">↑ +11.2%</div></div>
+          <div class="fin-s-card"><div class="fsc-lbl">Cash Position</div><div class="fsc-val">$4.8M</div><div class="fsc-chg" style="color:var(--gold)">90-day forecast: +$2.1M</div></div>
+        </div>
+        <div class="ov-row ov-row-2" style="margin-bottom:12px">
+          <div class="db-card">
+            <div class="db-card-title">P&L Overview <span class="db-card-tag tag-live">● Live</span></div>
+            <div class="db-card-sub">Last 12 months · All entities</div>
+            <canvas id="plChart" height="180" style="width:100%;margin-top:12px"></canvas>
+          </div>
+          <div class="db-card">
+            <div class="db-card-title">Key Ratios</div>
+            <div class="db-card-sub">Current period vs targets</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+              <div class="gauge-wrap"><svg class="gauge-svg" width="100" height="60" viewBox="0 0 100 60"><path d="M10 55 A40 40 0 0 1 90 55" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="10" stroke-linecap="round"/><path id="gp1" d="M10 55 A40 40 0 0 1 90 55" fill="none" stroke="#e8451a" stroke-width="10" stroke-linecap="round" stroke-dasharray="0 126"/></svg><div class="gauge-val">64%</div><div class="gauge-lbl">Gross Profit</div></div>
+              <div class="gauge-wrap"><svg class="gauge-svg" width="100" height="60" viewBox="0 0 100 60"><path d="M10 55 A40 40 0 0 1 90 55" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="10" stroke-linecap="round"/><path id="gp2" d="M10 55 A40 40 0 0 1 90 55" fill="none" stroke="#1a6ee8" stroke-width="10" stroke-linecap="round" stroke-dasharray="0 126"/></svg><div class="gauge-val">36%</div><div class="gauge-lbl">Operating Ratio</div></div>
+              <div class="gauge-wrap"><svg class="gauge-svg" width="100" height="60" viewBox="0 0 100 60"><path d="M10 55 A40 40 0 0 1 90 55" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="10" stroke-linecap="round"/><path id="gp3" d="M10 55 A40 40 0 0 1 90 55" fill="none" stroke="#18a86b" stroke-width="10" stroke-linecap="round" stroke-dasharray="0 126"/></svg><div class="gauge-val">38%</div><div class="gauge-lbl">Net Margin</div></div>
+              <div class="gauge-wrap"><svg class="gauge-svg" width="100" height="60" viewBox="0 0 100 60"><path d="M10 55 A40 40 0 0 1 90 55" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="10" stroke-linecap="round"/><path id="gp4" d="M10 55 A40 40 0 0 1 90 55" fill="none" stroke="#c9a84c" stroke-width="10" stroke-linecap="round" stroke-dasharray="0 126"/></svg><div class="gauge-val">21%</div><div class="gauge-lbl">EBITDA Margin</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-title">Income & Expenses — Account Breakdown</div>
+          <div class="db-card-sub">FYTD vs Prior Year vs Budget</div>
+          <table class="db-table" style="margin-top:12px">
+            <thead><tr><th>Account Class</th><th>FYTD</th><th>Prior Year</th><th>Budget</th><th>Variance</th><th>FYTD/PY/Budget</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600;color:var(--text1)">Gross Sales</td><td>$517K</td><td>$689K</td><td>$600K</td><td style="color:var(--accent)">-$83K</td><td><div style="display:flex;gap:4px;align-items:center"><div style="height:6px;width:75px;background:var(--accent2);border-radius:2px;opacity:.7"></div><div style="height:6px;width:90px;background:var(--accent3);border-radius:2px;opacity:.5"></div></div></td></tr>
+              <tr><td style="font-weight:600;color:var(--text1)">Operating Cost</td><td>$188K</td><td>$251K</td><td>$200K</td><td style="color:var(--accent3)">+$12K</td><td><div style="display:flex;gap:4px;align-items:center"><div style="height:6px;width:55px;background:var(--accent2);border-radius:2px;opacity:.7"></div><div style="height:6px;width:65px;background:var(--accent3);border-radius:2px;opacity:.5"></div></div></td></tr>
+              <tr><td style="font-weight:600;color:var(--text1)">Gross Profit</td><td>$329K</td><td>$438K</td><td>$400K</td><td style="color:var(--accent)">-$71K</td><td><div style="display:flex;gap:4px;align-items:center"><div style="height:6px;width:65px;background:var(--accent2);border-radius:2px;opacity:.7"></div><div style="height:6px;width:80px;background:var(--accent3);border-radius:2px;opacity:.5"></div></div></td></tr>
+              <tr><td style="font-weight:600;color:var(--text1)">Expenses</td><td>$133K</td><td>$177K</td><td>$140K</td><td style="color:var(--gold)">-$7K</td><td><div style="display:flex;gap:4px;align-items:center"><div style="height:6px;width:50px;background:var(--accent2);border-radius:2px;opacity:.7"></div><div style="height:6px;width:55px;background:var(--accent3);border-radius:2px;opacity:.5"></div></div></td></tr>
+              <tr><td style="font-weight:600;color:var(--text1)">Net Profit</td><td>$196K</td><td>$261K</td><td>$260K</td><td style="color:var(--accent)">-$64K</td><td><div style="display:flex;gap:4px;align-items:center"><div style="height:6px;width:55px;background:var(--accent2);border-radius:2px;opacity:.7"></div><div style="height:6px;width:75px;background:var(--accent3);border-radius:2px;opacity:.5"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── SIMULATION ── -->
+      <div class="mod-page" id="pg-simulation">
+        <div class="sim-controls">
+          <button class="sim-ctrl-btn run" id="simRunBtn" onclick="toggleSim()">▶ Run Simulation</button>
+          <select class="sim-scenario-select" id="simScenario">
+            <option>Baseline Scenario</option><option>+20% Demand Spike</option><option>Machine PRESS-2 Down</option><option>Supply Delay — Supplier B</option><option>New Product Introduction</option>
+          </select>
+          <span style="font-family:var(--mono);font-size:.72rem;color:var(--text3)">Iterations: </span>
+          <select class="sim-scenario-select"><option>1,000</option><option>5,000</option><option>10,000</option><option>50,000</option></select>
+          <span style="font-family:var(--mono);font-size:.7rem;color:var(--accent3)" id="simStatus">● Ready</span>
+        </div>
+        <div class="ov-row ov-row-4" style="margin-bottom:12px">
+          <div class="kpi-card kpi-accent2"><div class="kpi-lbl">Simulated Throughput</div><div class="kpi-val" id="sim-thru">—</div><div class="kpi-chg" id="sim-thru-chg" style="color:var(--text3)">Run simulation</div></div>
+          <div class="kpi-card kpi-accent3"><div class="kpi-lbl">Predicted OEE</div><div class="kpi-val" id="sim-oee">—</div><div class="kpi-chg" id="sim-oee-chg" style="color:var(--text3)">Run simulation</div></div>
+          <div class="kpi-card kpi-accent4"><div class="kpi-lbl">Bottleneck</div><div class="kpi-val" id="sim-bottle" style="font-size:1.2rem">—</div><div class="kpi-chg" id="sim-bottle-chg" style="color:var(--text3)">Run simulation</div></div>
+          <div class="kpi-card kpi-accent1"><div class="kpi-lbl">Risk Score</div><div class="kpi-val" id="sim-risk">—</div><div class="kpi-chg" id="sim-risk-chg" style="color:var(--text3)">Run simulation</div></div>
+        </div>
+        <div class="ov-row ov-row-2">
+          <div class="db-card">
+            <div class="db-card-title">Digital Twin — Node Network <span class="db-card-tag tag-live" id="simLiveBadge">● Standby</span></div>
+            <div class="db-card-sub">Real-time production flow visualization</div>
+            <canvas id="simCanvas" height="280" style="width:100%;margin-top:10px;border-radius:8px;background:var(--d3)"></canvas>
+          </div>
+          <div class="db-card">
+            <div class="db-card-title">Scenario Comparison</div>
+            <div class="db-card-sub">Baseline vs selected scenario</div>
+            <canvas id="simCompareChart" height="280" style="width:100%;margin-top:10px"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SUPPLY CHAIN ── -->
+      <div class="mod-page" id="pg-supply">
+        <div class="ov-row ov-row-4" style="margin-bottom:14px">
+          <div class="kpi-card kpi-accent3"><div class="kpi-lbl">On-Time Delivery</div><div class="kpi-val">94.2%</div><div class="kpi-chg up">↑ Above 90% target</div></div>
+          <div class="kpi-card kpi-accent2"><div class="kpi-lbl">Inventory Turns</div><div class="kpi-val">8.4×</div><div class="kpi-chg up">↑ Industry avg: 6.2×</div></div>
+          <div class="kpi-card kpi-accent4"><div class="kpi-lbl">PO Cycle Time</div><div class="kpi-val">3.2d</div><div class="kpi-chg up">↓ 1.1d vs last quarter</div></div>
+          <div class="kpi-card kpi-accent1"><div class="kpi-lbl">Supplier Risk</div><div class="kpi-val" style="color:var(--gold)">Medium</div><div class="kpi-chg dn">2 at-risk suppliers</div></div>
+        </div>
+        <div class="db-card" style="margin-bottom:12px">
+          <div class="db-card-title">Material Flow Pipeline</div>
+          <div class="db-card-sub">Supplier → Warehouse → Production → Delivery</div>
+          <div class="sc-pipeline">
+            <div class="sc-node"><div class="sc-bubble" style="background:rgba(232,69,26,.1);border-color:rgba(232,69,26,.3)">🏗️</div><div class="sc-node-lbl">Supplier</div></div>
+            <div class="sc-connector"><div class="sc-conn-fill"></div><div class="sc-conn-dot" style="background:var(--accent);animation-delay:0s"></div></div>
+            <div class="sc-node"><div class="sc-bubble" style="background:rgba(26,110,232,.1);border-color:rgba(26,110,232,.3)">📦</div><div class="sc-node-lbl">Warehouse</div></div>
+            <div class="sc-connector"><div class="sc-conn-fill"></div><div class="sc-conn-dot" style="background:var(--accent2);animation-delay:.8s"></div></div>
+            <div class="sc-node"><div class="sc-bubble" style="background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.3)">⚙️</div><div class="sc-node-lbl">Production</div></div>
+            <div class="sc-connector"><div class="sc-conn-fill"></div><div class="sc-conn-dot" style="background:var(--gold);animation-delay:1.6s"></div></div>
+            <div class="sc-node"><div class="sc-bubble" style="background:rgba(24,168,107,.1);border-color:rgba(24,168,107,.3)">🚚</div><div class="sc-node-lbl">Outbound</div></div>
+            <div class="sc-connector"><div class="sc-conn-fill"></div><div class="sc-conn-dot" style="background:var(--accent3);animation-delay:2.4s"></div></div>
+            <div class="sc-node"><div class="sc-bubble" style="background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.3)">🏢</div><div class="sc-node-lbl">Customer</div></div>
+          </div>
+        </div>
+        <div class="ov-row ov-row-2">
+          <div class="db-card">
+            <div class="db-card-title">Supplier Performance</div>
+            <table class="db-table" style="margin-top:10px">
+              <thead><tr><th>Supplier</th><th>Category</th><th>On-Time %</th><th>Quality</th><th>Risk</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Supplier A</td><td>Steel</td><td>98.2%</td><td>A+</td><td><span class="db-badge b-g">Low</span></td><td><span class="db-badge b-g">Active</span></td></tr>
+                <tr><td>Supplier B</td><td>Electronics</td><td>72.1%</td><td>B</td><td><span class="db-badge b-r">High</span></td><td><span class="db-badge b-a">Watch</span></td></tr>
+                <tr><td>Supplier C</td><td>Plastics</td><td>94.7%</td><td>A</td><td><span class="db-badge b-g">Low</span></td><td><span class="db-badge b-g">Active</span></td></tr>
+                <tr><td>Supplier D</td><td>Fasteners</td><td>88.4%</td><td>A-</td><td><span class="db-badge b-a">Medium</span></td><td><span class="db-badge b-g">Active</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="db-card">
+            <div class="db-card-title">Inventory Status</div>
+            <table class="db-table" style="margin-top:10px">
+              <thead><tr><th>Material</th><th>Stock</th><th>Min Level</th><th>Days Left</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Steel Sheet A3</td><td>2,400 kg</td><td>3,000 kg</td><td>6</td><td><span class="db-badge b-r">Low Stock</span></td></tr>
+                <tr><td>Copper Wire 2mm</td><td>8,200 m</td><td>2,000 m</td><td>28</td><td><span class="db-badge b-g">OK</span></td></tr>
+                <tr><td>Bearing 6205</td><td>340 pcs</td><td>200 pcs</td><td>12</td><td><span class="db-badge b-a">Reorder Soon</span></td></tr>
+                <tr><td>Seal Kit B7</td><td>120 pcs</td><td>100 pcs</td><td>9</td><td><span class="db-badge b-a">Reorder Soon</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── WORKFORCE ── -->
+      <div class="mod-page" id="pg-workforce">
+        <div class="wf-dept-grid">
+          <div class="wf-dept"><div class="wf-dept-name">Production</div><div class="wf-dept-count">84</div><div class="wf-dept-lbl">Headcount · 78 on shift</div></div>
+          <div class="wf-dept"><div class="wf-dept-name">Quality Control</div><div class="wf-dept-count">18</div><div class="wf-dept-lbl">Headcount · 14 on shift</div></div>
+          <div class="wf-dept"><div class="wf-dept-name">Maintenance</div><div class="wf-dept-count">12</div><div class="wf-dept-lbl">Headcount · 8 on shift</div></div>
+          <div class="wf-dept"><div class="wf-dept-name">Logistics</div><div class="wf-dept-count">22</div><div class="wf-dept-lbl">Headcount · 18 on shift</div></div>
+          <div class="wf-dept"><div class="wf-dept-name">Engineering</div><div class="wf-dept-count">16</div><div class="wf-dept-lbl">Headcount · 16 on shift</div></div>
+          <div class="wf-dept"><div class="wf-dept-name">Administration</div><div class="wf-dept-count">9</div><div class="wf-dept-lbl">Headcount · 7 on shift</div></div>
+        </div>
+        <div class="ov-row ov-row-2">
+          <div class="db-card">
+            <div class="db-card-title">Today's Shift Schedule</div>
+            <table class="db-table" style="margin-top:10px">
+              <thead><tr><th>Employee</th><th>Dept</th><th>Shift</th><th>Machine/Role</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>J. Smith</td><td>Production</td><td>Day (06–14)</td><td>CNC-01</td><td><span class="db-badge b-g">On Floor</span></td></tr>
+                <tr><td>M. Patel</td><td>Production</td><td>Day (06–14)</td><td>LATHE-A</td><td><span class="db-badge b-g">On Floor</span></td></tr>
+                <tr><td>T. Chen</td><td>Production</td><td>Day (06–14)</td><td>PRESS-2</td><td><span class="db-badge b-r">On Alert</span></td></tr>
+                <tr><td>A. Kim</td><td>QC</td><td>Day (08–16)</td><td>Inspection</td><td><span class="db-badge b-g">On Floor</span></td></tr>
+                <tr><td>R. Nguyen</td><td>Maintenance</td><td>Day (07–15)</td><td>PRESS-2 Repair</td><td><span class="db-badge b-a">Dispatched</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="db-card">
+            <div class="db-card-title">Payroll Summary — Current Period</div>
+            <div style="display:flex;flex-direction:column;gap:14px;margin-top:16px">
+              <div><div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:5px"><span style="color:var(--text1);font-weight:600">Regular Hours</span><span style="font-family:var(--mono);color:var(--text2)">$284,200</span></div><div class="prog-bar-wrap"><div class="prog-bar-fill" style="background:var(--accent2);width:78%"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:5px"><span style="color:var(--text1);font-weight:600">Overtime</span><span style="font-family:var(--mono);color:var(--text2)">$42,100</span></div><div class="prog-bar-wrap"><div class="prog-bar-fill" style="background:var(--gold);width:16%"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:5px"><span style="color:var(--text1);font-weight:600">Benefits & Taxes</span><span style="font-family:var(--mono);color:var(--text2)">$68,400</span></div><div class="prog-bar-wrap"><div class="prog-bar-fill" style="background:var(--accent);width:22%"></div></div></div>
+              <div style="padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center"><span style="font-size:.88rem;font-weight:700;color:var(--text1)">Total Labor Cost</span><span style="font-family:var(--serif);font-size:1.5rem;color:var(--text1)">$394,700</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── QUALITY ── -->
+      <div class="mod-page" id="pg-quality">
+        <div class="qc-gauge-row">
+          <div class="kpi-card kpi-accent3"><div class="kpi-lbl">First Pass Yield</div><div class="kpi-val">97.4%</div><div class="kpi-chg up">↑ Above 96% target</div></div>
+          <div class="kpi-card kpi-accent2"><div class="kpi-lbl">Defect PPM</div><div class="kpi-val">38</div><div class="kpi-chg up">↓ 12% below SLA</div></div>
+          <div class="kpi-card kpi-accent4"><div class="kpi-lbl">Open NCRs</div><div class="kpi-val" style="color:var(--gold)">4</div><div class="kpi-chg dn">2 overdue CAPA</div></div>
+          <div class="kpi-card kpi-accent1"><div class="kpi-lbl">Customer Returns</div><div class="kpi-val">0.12%</div><div class="kpi-chg up">↓ Below 0.5% target</div></div>
+        </div>
+        <div class="ov-row ov-row-2">
+          <div class="db-card">
+            <div class="db-card-title">Defect Pareto — Current Month</div>
+            <div class="db-card-sub">Top defect categories by frequency</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">
+              <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span style="color:var(--text1)">Surface Scratch</span><span style="font-family:var(--mono);color:var(--text2)">38%</span></div><div class="prog-bar-wrap"><div class="prog-bar-fill" style="background:var(--accent);width:38%"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span style="color:var(--text1)">Dimensional OOT</span><span style="font-family:var(--mono);color:var(--text2)">27%</span></div><div class="prog-bar-wrap"><div class="prog-bar-fill" style="background:var(--gold);width:27%"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span style="color:var(--text1)">Weld Porosity</span><span style="font-family:var(--mono);color:var(--text2)">18%</span></div><div class="prog-bar-wrap"><div class="prog-bar-fill" style="background:var(--accent2);width:18%"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span style="color:var(--text1)">Coating Defect</span><span style="font-family:var(--mono);color:var(--text2)">12%</span></div><div class="prog-bar-wrap"><div class="prog-bar-fill" style="background:var(--accent3);width:12%"></div></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px"><span style="color:var(--text1)">Other</span><span style="font-family:var(--mono);color:var(--text2)">5%</span></div><div class="prog-bar-wrap"><div class="prog-bar-fill" style="background:rgba(255,255,255,.2);width:5%"></div></div></div>
+            </div>
+          </div>
+          <div class="db-card">
+            <div class="db-card-title">Open NCR Tracker</div>
+            <table class="db-table" style="margin-top:10px">
+              <thead><tr><th>NCR #</th><th>Description</th><th>Severity</th><th>CAPA Due</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>NCR-0084</td><td>Bearing tolerance OOT</td><td><span class="db-badge b-r">Critical</span></td><td>Mar 8</td><td><span class="db-badge b-a">In Progress</span></td></tr>
+                <tr><td>NCR-0083</td><td>Surface finish defect</td><td><span class="db-badge b-a">Major</span></td><td>Mar 10</td><td><span class="db-badge b-a">In Progress</span></td></tr>
+                <tr><td>NCR-0082</td><td>Weld porosity batch</td><td><span class="db-badge b-a">Major</span></td><td>Mar 5</td><td><span class="db-badge b-r">Overdue</span></td></tr>
+                <tr><td>NCR-0081</td><td>Dimension deviation X9</td><td><span class="db-badge b-b">Minor</span></td><td>Mar 12</td><td><span class="db-badge b-g">Under Review</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ALERTS ── -->
+      <div class="mod-page" id="pg-alerts">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="alert-item" style="border-color:rgba(232,69,26,.2)"><span class="alert-icon">🚨</span><div><div class="alert-title">CRITICAL: PRESS-2 Bearing Failure Predicted</div><div class="alert-body">Vibration sensor data indicates bearing wear. ML model predicts failure within 48–72 hours. Recommend scheduling maintenance before next shift. Estimated repair time: 4h. Downtime cost if unscheduled: ~$42K.</div><div class="alert-time">2 minutes ago · Auto-assigned to Maintenance team</div></div></div>
+          <div class="alert-item" style="border-color:rgba(201,168,76,.2)"><span class="alert-icon">📉</span><div><div class="alert-title">WARNING: Raw Material Cost Variance +$89K</div><div class="alert-body">Steel Sheet A3 and Bearing 6205 costs are running 18% above budget. Primary driver: Supplier B late deliveries forcing spot-market purchases. CAPA recommended.</div><div class="alert-time">18 minutes ago · Finance · Supply Chain</div></div></div>
+          <div class="alert-item" style="border-color:rgba(201,168,76,.2)"><span class="alert-icon">📦</span><div><div class="alert-title">WARNING: Steel Sheet A3 — 6 Days Remaining</div><div class="alert-body">Current inventory: 2,400 kg. At current consumption rate (400 kg/day), reorder point will be reached in 6 days. Preferred supplier lead time: 8 days. Auto-PO recommended.</div><div class="alert-time">1 hour ago · Procurement</div></div></div>
+          <div class="alert-item"><span class="alert-icon">📋</span><div><div class="alert-title">INFO: WO-2840 Shaft Assembly — Complete</div><div class="alert-body">Work order for 80 units completed on time. FPY: 98.75%. Moving to outbound inspection queue.</div><div class="alert-time">2 hours ago · Manufacturing</div></div></div>
+          <div class="alert-item"><span class="alert-icon">🛡️</span><div><div class="alert-title">INFO: NCR-0082 CAPA Overdue</div><div class="alert-body">Non-Conformance Report NCR-0082 (Weld Porosity Batch) has a CAPA due date of March 5. Action required by Quality Engineer.</div><div class="alert-time">3 hours ago · Quality</div></div></div>
+        </div>
+      </div>
+
+      <!-- ── SETTINGS ── -->
+      <div class="mod-page" id="pg-settings">
+        <div class="ov-row ov-row-2">
+          <div class="db-card"><div class="db-card-title">Workspace Settings</div><div style="display:flex;flex-direction:column;gap:14px;margin-top:18px">
+            <div><div class="ob-label" style="margin-bottom:5px">Company Name</div><input class="ob-input" id="db-company-input" style="width:100%" value="Acme Manufacturing Inc."></div>
+            <div><div class="ob-label" style="margin-bottom:5px">Industry</div><select class="ob-input ob-select" style="width:100%;background:rgba(255,255,255,.04)"><option>Automotive</option></select></div>
+            <div><div class="ob-label" style="margin-bottom:5px">Timezone</div><select class="ob-input ob-select" style="width:100%;background:rgba(255,255,255,.04)"><option>UTC-5 (Eastern)</option><option>UTC-8 (Pacific)</option><option>UTC+0 (GMT)</option><option>UTC+5:30 (IST)</option></select></div>
+            <button class="ob-next" style="width:100%;margin-top:4px">Save Changes</button>
+          </div></div>
+          <div class="db-card"><div class="db-card-title">Active Modules</div><div class="mod-grid-ob" style="margin-top:16px" id="settingsMods">
+            <div class="mod-ob sel"><div class="mod-ob-cb">✓</div><div class="mod-ob-label">⚙️ Manufacturing</div></div>
+            <div class="mod-ob sel"><div class="mod-ob-cb">✓</div><div class="mod-ob-label">💹 Finance</div></div>
+            <div class="mod-ob sel"><div class="mod-ob-cb">✓</div><div class="mod-ob-label">🔬 Simulation</div></div>
+            <div class="mod-ob"><div class="mod-ob-cb"></div><div class="mod-ob-label">📦 Supply Chain</div></div>
+            <div class="mod-ob"><div class="mod-ob-cb"></div><div class="mod-ob-label">👥 Workforce</div></div>
+            <div class="mod-ob"><div class="mod-ob-cb"></div><div class="mod-ob-label">🛡️ Quality & QC</div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- ── WORK ORDERS ── -->
+      <div class="mod-page" id="pg-workorders">
+        <div class="ov-row ov-row-4" style="margin-bottom:14px">
+          <div class="kpi-card kpi-accent3"><div class="kpi-lbl">Active Orders</div><div class="kpi-val">12</div><div class="kpi-chg up">3 completing today</div></div>
+          <div class="kpi-card kpi-accent2"><div class="kpi-lbl">Completed Today</div><div class="kpi-val">4</div><div class="kpi-chg up">↑ On schedule</div></div>
+          <div class="kpi-card kpi-accent4"><div class="kpi-lbl">Scheduled This Week</div><div class="kpi-val">31</div><div class="kpi-chg up">All materials confirmed</div></div>
+          <div class="kpi-card kpi-accent1"><div class="kpi-lbl">Late Orders</div><div class="kpi-val" style="color:var(--accent)">2</div><div class="kpi-chg dn">Needs rescheduling</div></div>
+        </div>
+        <div class="db-card">
+          <div class="db-card-title">All Work Orders</div>
+          <table class="db-table" style="margin-top:12px">
+            <thead><tr><th>#</th><th>Product</th><th>Qty</th><th>Line</th><th>Operator</th><th>Material</th><th>Start</th><th>Due</th><th>Priority</th><th>Status</th><th>Progress</th></tr></thead>
+            <tbody>
+              <tr><td>WO-2841</td><td>Housing A-12</td><td>500</td><td>Line 1</td><td>J. Smith</td><td>Steel A3</td><td>08:00</td><td>14:30</td><td><span class="db-badge b-r">High</span></td><td><span class="db-badge b-g">Running</span></td><td><div class="prog-bar-wrap" style="width:80px"><div class="prog-bar-fill" style="background:var(--accent3);width:74%"></div></div></td></tr>
+              <tr><td>WO-2842</td><td>Valve Body</td><td>240</td><td>Line 2</td><td>M. Patel</td><td>Copper Wire</td><td>14:30</td><td>18:00</td><td><span class="db-badge b-a">Med</span></td><td><span class="db-badge b-a">Queued</span></td><td><div class="prog-bar-wrap" style="width:80px"><div class="prog-bar-fill" style="background:var(--gold);width:0%"></div></div></td></tr>
+              <tr><td>WO-2843</td><td>Bracket X9</td><td>1200</td><td>Line 3</td><td>T. Chen</td><td>Steel A3</td><td>06:00</td><td>20:00</td><td><span class="db-badge b-r">High</span></td><td><span class="db-badge b-r">Alert</span></td><td><div class="prog-bar-wrap" style="width:80px"><div class="prog-bar-fill" style="background:var(--accent);width:32%"></div></div></td></tr>
+              <tr><td>WO-2840</td><td>Shaft Assy</td><td>80</td><td>Line 1</td><td>J. Smith</td><td>Bearing 6205</td><td>04:00</td><td>08:00</td><td><span class="db-badge b-b">Low</span></td><td><span class="db-badge b-b">Complete</span></td><td><div class="prog-bar-wrap" style="width:80px"><div class="prog-bar-fill" style="background:var(--accent2);width:100%"></div></div></td></tr>
+              <tr><td>WO-2839</td><td>Cover Plate</td><td>350</td><td>Line 4</td><td>A. Kim</td><td>Aluminium</td><td>09:00</td><td>16:00</td><td><span class="db-badge b-a">Med</span></td><td><span class="db-badge b-g">Running</span></td><td><div class="prog-bar-wrap" style="width:80px"><div class="prog-bar-fill" style="background:var(--accent3);width:58%"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── CASH FLOW ── -->
+      <div class="mod-page" id="pg-cashflow">
+        <div class="ov-row ov-row-2" style="margin-bottom:12px">
+          <div class="kpi-card kpi-accent3"><div class="kpi-lbl">Total Bank Balance</div><div class="kpi-val">$4.8M</div><div class="kpi-chg up">↑ +$420K vs last month</div></div>
+          <div class="kpi-card kpi-accent2"><div class="kpi-lbl">Working Capital</div><div class="kpi-val">$2.1M</div><div class="kpi-chg up">Healthy · Ratio: 2.4×</div></div>
+        </div>
+        <div class="db-card" style="margin-bottom:12px">
+          <div class="db-card-title">Cash Flow — Net / In / Out</div>
+          <div class="db-card-sub">Last 12 months</div>
+          <canvas id="cashflowChart" height="200" style="width:100%;margin-top:12px"></canvas>
+        </div>
+        <div class="db-card">
+          <div class="db-card-title">90-Day Cash Forecast <span class="db-card-tag tag-live">AI · 94.2% Confidence</span></div>
+          <div class="db-card-sub">Projected inflows and outflows</div>
+          <table class="db-table" style="margin-top:12px">
+            <thead><tr><th>Period</th><th>Projected Inflow</th><th>Projected Outflow</th><th>Net Cash</th><th>Running Balance</th></tr></thead>
+            <tbody>
+              <tr><td>Mar 2026</td><td style="color:var(--accent3)">+$1,840K</td><td style="color:var(--accent)">-$1,320K</td><td style="color:var(--accent3)">+$520K</td><td>$5,320K</td></tr>
+              <tr><td>Apr 2026</td><td style="color:var(--accent3)">+$2,100K</td><td style="color:var(--accent)">-$1,480K</td><td style="color:var(--accent3)">+$620K</td><td>$5,940K</td></tr>
+              <tr><td>May 2026</td><td style="color:var(--accent3)">+$1,960K</td><td style="color:var(--accent)">-$1,400K</td><td style="color:var(--accent3)">+$560K</td><td>$6,500K</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+/* ═══ CURSOR ═══ */
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
+let mx=0,my=0,cx=0,cy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function lp(){cx+=(mx-cx)*.14;cy+=(my-cy)*.14;cur2.style.left=cx+'px';cur2.style.top=cy+'px';requestAnimationFrame(lp)})();
+document.querySelectorAll('a,button,.feat-card,.plan-ob,.mod-ob,.machine-card,.db-nav-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur2.style.transform='translate(-50%,-50%) scale(2)';cur2.style.borderColor='rgba(232,69,26,.4)'});
+  el.addEventListener('mouseleave',()=>{cur2.style.transform='translate(-50%,-50%) scale(1)';cur2.style.borderColor='rgba(255,255,255,.2)'});
+});
+
+/* ═══ PAGE ROUTING ═══ */
+let activeModules=['manufacturing','finance','simulation'];
+let userData={first:'Jane',last:'Doe',company:'Acme Manufacturing',plan:'growth'};
+let selectedPlan='growth';
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>{p.classList.remove('active');p.style.display='none'});
+  const p=document.getElementById('page-'+id);
+  p.style.display=id==='dashboard'?'flex':'block';
+  setTimeout(()=>p.classList.add('active'),10);
+}
+
+function showOnboard(){showPage('onboard');resetOnboard()}
+function quickStartTrial(){
+  const e=document.getElementById('lcta-email').value.trim();
+  if(e){document.getElementById('ob_em').value=e}
+  showOnboard();
+}
+window.showOnboard=showOnboard;
+window.quickStartTrial=quickStartTrial;
+
+/* ═══ LANDING ANIMATIONS ═══ */
+window.addEventListener('load',()=>{
+  anime({targets:'#lh-ey',opacity:[0,1],translateY:[12,0],duration:700,easing:'easeOutExpo',delay:200});
+  anime({targets:'#lh-h1',opacity:[0,1],translateY:[24,0],duration:900,easing:'easeOutExpo',delay:380});
+  anime({targets:'#lh-sub',opacity:[0,1],translateY:[12,0],duration:700,easing:'easeOutExpo',delay:580});
+  anime({targets:'#lh-act',opacity:[0,1],translateY:[12,0],duration:700,easing:'easeOutExpo',delay:750});
+  anime({targets:'#lh-st',opacity:[0,1],duration:700,easing:'easeOutExpo',delay:950});
+  anime({targets:'#lh-right',opacity:[0,1],translateY:[24,0],scale:[.97,1],duration:1000,easing:'easeOutExpo',delay:500});
+  // Counters
+  anime({targets:{v:0},v:3500,duration:2000,delay:1000,easing:'easeOutExpo',update:a=>document.getElementById('lhs1').textContent=Math.round(a.animations[0].currentValue).toLocaleString()+'+'});
+  anime({targets:{v:0},v:41,duration:2000,delay:1200,easing:'easeOutExpo',update:a=>document.getElementById('lhs2').textContent=Math.round(a.animations[0].currentValue)+'%'});
+  anime({targets:{v:0},v:2.4,duration:2000,delay:1400,easing:'easeOutExpo',update:a=>document.getElementById('lhs3').textContent=parseFloat(a.animations[0].currentValue).toFixed(1)+'ms'});
+  // Build preview bars
+  buildPreviewBars();
+  // Preview donut
+  setTimeout(()=>{
+    const C=2*Math.PI*25;
+    [{id:'pvDa',p:.33,o:0},{id:'pvDb',p:.37,o:.33},{id:'pvDc',p:.30,o:.70}].forEach(s=>{
+      const el=document.getElementById(s.id);if(!el)return;
+      el.setAttribute('stroke-dasharray',`${s.p*C} ${C-s.p*C}`);
+      el.setAttribute('stroke-dashoffset',`${-s.o*C}`);
+    });
+  },800);
+});
+
+function buildPreviewBars(){
+  const data=[78,85,82,91,88,84,94,89];
+  const c=['#1a6ee8','#e8451a','#18a86b','#1a6ee8','#c9a84c','#18a86b','#e8451a','#1a6ee8'];
+  const cont=document.getElementById('pvBars');if(!cont)return;
+  data.forEach((v,i)=>{
+    const col=document.createElement('div');col.style.cssText='flex:1;display:flex;align-items:flex-end;height:55px';
+    const bar=document.createElement('div');bar.className='mb';
+    bar.style.cssText=`width:100%;height:0;background:${c[i]};opacity:.75;border-radius:2px 2px 0 0`;
+    col.appendChild(bar);cont.appendChild(col);
+    setTimeout(()=>{bar.style.height=(v/100*50)+'px';bar.style.transition='height .8s'},800+i*80);
+  });
+}
+
+// Live preview updates
+setInterval(()=>{
+  const u=230+Math.floor(Math.random()*30);
+  const o=(85+Math.random()*8).toFixed(1);
+  const d=30+Math.floor(Math.random()*25);
+  const el1=document.getElementById('pvOee'),el2=document.getElementById('pvUnits'),el3=document.getElementById('pvDefect');
+  if(el1)el1.textContent=o+'%';if(el2)el2.textContent=u;if(el3)el3.textContent=d;
+},2000);
+
+/* ═══ ONBOARDING ═══ */
+let obStep=1;
+function resetOnboard(){obStep=1;goObStep(1);['obp2','obp3'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none'});const el=document.getElementById('obp1');if(el)el.style.display='block';document.getElementById('obLoading').classList.remove('show');document.getElementById('obSuccess').classList.remove('show')}
+
+function goObStep(n){
+  obStep=n;
+  const pcts={1:'33%',2:'66%',3:'100%'};
+  document.getElementById('obProg').style.width=pcts[n]||'100%';
+  [1,2,3].forEach(i=>{
+    const num=document.getElementById('osn'+i),lbl=document.getElementById('osl'+i),line=document.getElementById('osl_'+i);
+    num.classList.remove('active','done');lbl.classList.remove('active');
+    if(i<n){num.classList.add('done');num.textContent='✓';if(line)line.classList.add('done')}
+    else if(i===n){num.classList.add('active');num.textContent='0'+i;lbl.classList.add('active');if(line)line.classList.remove('done')}
+    else{num.textContent='0'+i;if(line)line.classList.remove('done')}
+  });
+}
+
+function vEmail(e){return/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)}
+function setObErr(fid,eid,show){const f=document.getElementById(fid),e=document.getElementById(eid);f.classList.toggle('err',show);e.classList.toggle('show',show);return !show}
+
+document.getElementById('ob_pw').addEventListener('input',function(){
+  const v=this.value;const bars=['pw1','pw2','pw3','pw4'];const cols=['#e8451a','#c9a84c','#1a6ee8','#18a86b'];const lbls=['Weak','Fair','Good','Strong'];
+  let s=0;if(v.length>=8)s++;if(/[A-Z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+  bars.forEach((id,i)=>{document.getElementById(id).style.background=i<s?cols[s-1]:'rgba(255,255,255,.07)'});
+  const h=document.getElementById('pwh');h.textContent=s?lbls[s-1]+' password':'Enter a password';h.style.color=s?cols[s-1]:'var(--text3)';
+});
+
+document.getElementById('on1').addEventListener('click',()=>{
+  const fn=document.getElementById('ob_fn').value.trim(),ln=document.getElementById('ob_ln').value.trim(),em=document.getElementById('ob_em').value.trim(),pw=document.getElementById('ob_pw').value;
+  let ok=setObErr('ob_fn','oe_fn',!fn)&setObErr('ob_ln','oe_ln',!ln)&setObErr('ob_em','oe_em',!vEmail(em))&setObErr('ob_pw','oe_pw',pw.length<8);
+  if(ok){userData.first=fn;userData.last=ln;userData.email=em;document.getElementById('obp1').style.display='none';document.getElementById('obp2').style.display='block';goObStep(2)}
+});
+document.getElementById('ob2').addEventListener('click',()=>{document.getElementById('obp2').style.display='none';document.getElementById('obp1').style.display='block';goObStep(1)});
+document.getElementById('on2').addEventListener('click',()=>{
+  const co=document.getElementById('ob_co').value.trim(),ind=document.getElementById('ob_ind').value,sz=document.getElementById('ob_sz').value;
+  let ok=setObErr('ob_co','oe_co',!co)&setObErr('ob_ind','oe_ind',!ind)&setObErr('ob_sz','oe_sz',!sz);
+  if(ok){userData.company=co;userData.industry=ind;userData.size=sz;userData.plan=selectedPlan;document.getElementById('obp2').style.display='none';document.getElementById('obp3').style.display='block';goObStep(3)}
+});
+document.getElementById('ob3').addEventListener('click',()=>{document.getElementById('obp3').style.display='none';document.getElementById('obp2').style.display='block';goObStep(2)});
+document.getElementById('on3').addEventListener('click',()=>{
+  activeModules=[...document.querySelectorAll('.mod-ob.sel')].map(m=>m.dataset.mod);
+  if(!activeModules.length){alert('Please select at least one module.');return}
+  document.getElementById('obp3').style.display='none';
+  document.getElementById('obStepsRow').style.display='none';
+  document.getElementById('obLoading').classList.add('show');
+  const steps=['osl__1','osl__2','osl__3','osl__4','osl__5'];
+  steps.forEach((id,i)=>{
+    setTimeout(()=>{steps.forEach(s=>document.getElementById(s).classList.remove('act'));document.getElementById(id).classList.add('act')},i*800);
+    setTimeout(()=>{document.getElementById(id).classList.remove('act');document.getElementById(id).classList.add('done');document.getElementById(id).textContent='✓ '+document.getElementById(id).textContent.slice(2)},i*800+600);
+  });
+  setTimeout(()=>{
+    const wid='AX-'+Math.random().toString(36).substr(2,6).toUpperCase();
+    const end=new Date(Date.now()+14*24*3600*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    document.getElementById('obSuccDetails').innerHTML=`<div class="ob-sd"><span class="ob-sd-k">Account</span><span class="ob-sd-v">${userData.email||'user@example.com'}</span></div><div class="ob-sd"><span class="ob-sd-k">Workspace</span><span class="ob-sd-v">${wid}</span></div><div class="ob-sd"><span class="ob-sd-k">Plan</span><span class="ob-sd-v">${(userData.plan||'growth').charAt(0).toUpperCase()+(userData.plan||'growth').slice(1)}</span></div><div class="ob-sd"><span class="ob-sd-k">Trial ends</span><span class="ob-sd-v">${end}</span></div><div class="ob-sd"><span class="ob-sd-k">Modules</span><span class="ob-sd-v">${activeModules.length} activated</span></div>`;
+    document.getElementById('obLoading').classList.remove('show');
+    document.getElementById('obSuccess').classList.add('show');
+  },steps.length*800+500);
+});
+document.getElementById('launchDash').addEventListener('click',()=>launchDashboard());
+window.selPlanOb=function(el){document.querySelectorAll('.plan-ob').forEach(p=>p.classList.remove('sel'));el.classList.add('sel');selectedPlan=el.dataset.plan};
+window.togModOb=function(el){el.classList.toggle('sel');el.querySelector('.mod-ob-cb').textContent=el.classList.contains('sel')?'✓':''};
+
+/* ═══ LAUNCH DASHBOARD ═══ */
+function launchDashboard(){
+  // Apply user data
+  const initials=(userData.first?userData.first[0]:'J')+(userData.last?userData.last[0]:'D');
+  document.getElementById('db-avatar').textContent=initials.toUpperCase();
+  document.getElementById('db-uname').textContent=(userData.first||'Jane')+' '+(userData.last||'Doe');
+  document.getElementById('db-company-name').textContent=userData.company||'My Company';
+  // Show/hide nav items based on modules
+  const modMap={manufacturing:['nav-manufacturing','nav-manufacturing-item','nav-workorders-item'],finance:['nav-finance-sec','nav-finance-item','nav-cashflow-item'],simulation:['nav-simulation-sec','nav-simulation-item'],supply:['nav-supply-sec','nav-supply-item'],workforce:['nav-workforce-sec','nav-workforce-item'],quality:['nav-quality-sec','nav-quality-item']};
+  Object.entries(modMap).forEach(([mod,ids])=>{
+    const show=activeModules.includes(mod);
+    ids.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=show?'flex':'none'});
+  });
+  showPage('dashboard');
+  setTimeout(()=>{buildDashboardCharts();startLiveUpdates()},100);
+}
+
+/* ═══ NAVIGATION ═══ */
+const pageTitles={overview:'Command Center',manufacturing:'Shop Floor',workorders:'Work Orders',finance:'Finance',cashflow:'Cash Flow',simulation:'Simulation Lab',supply:'Supply Chain',workforce:'Workforce',quality:'Quality & QC',alerts:'Alerts & Notifications',settings:'Settings'};
+window.navTo=function(el){
+  document.querySelectorAll('.db-nav-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  const pg=el.dataset.page;
+  document.querySelectorAll('.mod-page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pg-'+pg)?.classList.add('active');
+  document.getElementById('dbPageTitle').textContent=pageTitles[pg]||pg;
+  if(pg==='overview')buildDashboardCharts();
+  if(pg==='finance')setTimeout(buildFinanceCharts,100);
+  if(pg==='simulation')setTimeout(()=>{buildSimChart();if(simRunning)startSimCanvas()},100);
+  if(pg==='cashflow')setTimeout(buildCashflowChart,100);
+};
+
+/* ═══ CHARTS ═══ */
+function drawLineChart(canvasId,datasets,labels,opts={}){
+  const canvas=document.getElementById(canvasId);if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.offsetWidth||canvas.parentElement.offsetWidth;canvas.width=W;
+  const H=canvas.height||150;
+  ctx.clearRect(0,0,W,H);
+  const pad={l:35,r:10,t:10,b:22};
+  const cw=W-pad.l-pad.r,ch=H-pad.t-pad.b;
+  let allVals=datasets.flatMap(d=>d.data);
+  const mn=Math.min(...allVals)*0.9,mx=Math.max(...allVals)*1.05;
+  // Grid
+  ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){const y=pad.t+ch*(1-i/4);ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(W-pad.r,y);ctx.stroke();ctx.fillStyle='rgba(255,255,255,.18)';ctx.font='9px Geist Mono,monospace';ctx.textAlign='right';ctx.fillText(Math.round(mn+(mx-mn)*i/4).toLocaleString(),pad.l-4,y+3)}
+  // Labels
+  ctx.fillStyle='rgba(255,255,255,.2)';ctx.font='9px Geist Mono,monospace';ctx.textAlign='center';
+  labels.forEach((l,i)=>{const x=pad.l+i/(labels.length-1)*cw;ctx.fillText(l,x,H-4)});
+  // Lines
+  datasets.forEach(ds=>{
+    const pts=ds.data.map((v,i)=>({x:pad.l+i/(ds.data.length-1)*cw,y:pad.t+ch*(1-(v-mn)/(mx-mn))}));
+    if(ds.fill){
+      ctx.beginPath();ctx.moveTo(pts[0].x,pad.t+ch);pts.forEach(p=>ctx.lineTo(p.x,p.y));ctx.lineTo(pts[pts.length-1].x,pad.t+ch);ctx.closePath();
+      ctx.fillStyle=ds.fillColor||'rgba(26,110,232,.08)';ctx.fill();
+    }
+    ctx.beginPath();ctx.strokeStyle=ds.color||'#1a6ee8';ctx.lineWidth=ds.lineWidth||1.5;ctx.lineJoin='round';ctx.lineCap='round';
+    pts.forEach((p,i)=>{i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y)});ctx.stroke();
+    if(ds.dots!==false){pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,2.5,0,Math.PI*2);ctx.fillStyle=ds.color;ctx.fill()})}
+  });
+}
+
+function buildDashboardCharts(){
+  const months=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+  const revData=[3.1,3.4,3.2,3.8,3.6,3.9,4.0,3.7,4.1,3.9,4.0,4.2];
+  const targetData=[3.5,3.5,3.5,3.8,3.8,3.8,4.0,4.0,4.0,4.2,4.2,4.2];
+  drawLineChart('revenueChart',[{data:revData,color:'#1a6ee8',fill:true,fillColor:'rgba(26,110,232,.07)',lineWidth:2},{data:targetData,color:'rgba(255,255,255,.15)',lineWidth:1.5,dots:false}],months);
+  // Throughput bar chart
+  const tpData=[198,215,227,241,238,229,244,251,238,247,243,239];
+  const tpCanvas=document.getElementById('throughputChart');if(!tpCanvas)return;
+  const ctx2=tpCanvas.getContext('2d');
+  const W=tpCanvas.offsetWidth||tpCanvas.parentElement.offsetWidth;tpCanvas.width=W;const H=tpCanvas.height;
+  ctx2.clearRect(0,0,W,H);
+  const bw=(W-40)/tpData.length;const maxV=260;
+  const hours=['08','09','10','11','12','13','14','15','16','17','18','19'];
+  const clrs=['#1a6ee8','#e8451a','#18a86b','#1a6ee8','#c9a84c','#18a86b','#e8451a','#1a6ee8','#18a86b','#1a6ee8','#e8451a','#18a86b'];
+  tpData.forEach((v,i)=>{
+    const bh=(v/maxV)*(H-30);const x=20+i*bw;const y=H-bh-18;
+    ctx2.fillStyle=clrs[i];ctx2.globalAlpha=.75;ctx2.beginPath();ctx2.roundRect(x,y,bw-3,bh,3);ctx2.fill();
+    ctx2.globalAlpha=1;ctx2.fillStyle='rgba(255,255,255,.2)';ctx2.font='8px Geist Mono,monospace';ctx2.textAlign='center';ctx2.fillText(hours[i],x+bw/2-1.5,H-4);
+  });
+  // Donut
+  const C=2*Math.PI*36;
+  [{id:'ovDa',p:.33,o:0},{id:'ovDb',p:.37,o:.33},{id:'ovDc',p:.20,o:.70},{id:'ovDd',p:.10,o:.90}].forEach(s=>{
+    const el=document.getElementById(s.id);if(!el)return;
+    setTimeout(()=>{el.style.transition='stroke-dasharray 1s cubic-bezier(.23,1,.32,1)';el.setAttribute('stroke-dasharray',`${s.p*C} ${C-s.p*C}`);el.setAttribute('stroke-dashoffset',`${-s.o*C}`)},100);
+  });
+}
+
+function buildFinanceCharts(){
+  const months=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+  const rev=[3.1,3.4,3.2,3.8,3.6,3.9,4.0,3.7,4.1,3.9,4.0,4.2];
+  const gp=rev.map(v=>v*.387);
+  const np=rev.map(v=>v*.215);
+  drawLineChart('plChart',[{data:rev,color:'#1a6ee8',fill:true,fillColor:'rgba(26,110,232,.06)',lineWidth:2},{data:gp,color:'#18a86b',lineWidth:1.5},{data:np,color:'#c9a84c',lineWidth:1.5}],months);
+  // Gauges
+  [[{id:'gp1',pct:.64,color:'#e8451a'},{id:'gp2',pct:.36,color:'#1a6ee8'},{id:'gp3',pct:.38,color:'#18a86b'},{id:'gp4',pct:.21,color:'#c9a84c'}]].flat().forEach(g=>{
+    const el=document.getElementById(g.id);if(!el)return;
+    setTimeout(()=>{el.style.transition='stroke-dasharray 1.1s cubic-bezier(.23,1,.32,1)';el.setAttribute('stroke-dasharray',`${g.pct*126} ${126-g.pct*126}`)},150);
+  });
+}
+
+function buildSimChart(){
+  const labels=['Q1 Baseline','Q2 Demand+20%','Machine Down','Supply Delay','New Product'];
+  const actualData=[247,198,219,231,263];
+  const simCanvas=document.getElementById('simCompareChart');if(!simCanvas)return;
+  const ctx=simCanvas.getContext('2d');
+  const W=simCanvas.offsetWidth||simCanvas.parentElement.offsetWidth;simCanvas.width=W;const H=simCanvas.height;
+  ctx.clearRect(0,0,W,H);
+  const bw=(W-60)/(labels.length);const maxV=300;
+  actualData.forEach((v,i)=>{
+    const bh=(v/maxV)*(H-40);const x=30+i*bw+4;
+    ctx.fillStyle=i===0?'#1a6ee8':i===1||i===2||i===3?'#e8451a':'#18a86b';
+    ctx.globalAlpha=.75;ctx.beginPath();if(ctx.roundRect)ctx.roundRect(x,H-bh-24,bw-8,bh,4);else ctx.rect(x,H-bh-24,bw-8,bh);ctx.fill();ctx.globalAlpha=1;
+    ctx.fillStyle='rgba(255,255,255,.25)';ctx.font='8.5px Geist Mono,monospace';ctx.textAlign='center';ctx.fillText(v+' u/h',x+(bw-8)/2,H-bh-28);
+    ctx.fillStyle='rgba(255,255,255,.2)';ctx.font='7.5px Geist,sans-serif';ctx.textAlign='center';
+    const words=labels[i].split(' ');words.forEach((w,wi)=>ctx.fillText(w,x+(bw-8)/2,H-8+wi*0));
+    ctx.fillText(labels[i].length>12?labels[i].substr(0,10)+'…':labels[i],x+(bw-8)/2,H-8);
+  });
+}
+
+function buildCashflowChart(){
+  const months=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+  const inflow=[1.4,1.6,1.5,1.8,1.7,1.9,2.0,1.8,2.1,1.9,2.0,2.1];
+  const outflow=[1.1,1.3,1.2,1.4,1.3,1.5,1.5,1.4,1.6,1.5,1.4,1.5];
+  const net=inflow.map((v,i)=>v-outflow[i]);
+  drawLineChart('cashflowChart',[{data:inflow,color:'#18a86b',fill:true,fillColor:'rgba(24,168,107,.06)',lineWidth:2},{data:outflow,color:'#e8451a',fill:true,fillColor:'rgba(232,69,26,.06)',lineWidth:2},{data:net,color:'#1a6ee8',lineWidth:2}],months);
+}
+
+/* ═══ SIMULATION ═══ */
+let simRunning=false,simAnimId=null,simFrame=0;
+window.toggleSim=function(){
+  simRunning=!simRunning;
+  const btn=document.getElementById('simRunBtn');
+  const status=document.getElementById('simStatus');
+  const badge=document.getElementById('simLiveBadge');
+  if(simRunning){
+    btn.textContent='⏸ Pause Simulation';btn.classList.remove('run');btn.classList.add('stop');
+    status.textContent='● Running';status.style.color='var(--accent3)';
+    badge.textContent='● Live';badge.className='db-card-tag tag-live';
+    runSimulation();startSimCanvas();
+  } else {
+    btn.textContent='▶ Run Simulation';btn.classList.remove('stop');btn.classList.add('run');
+    status.textContent='● Paused';status.style.color='var(--gold)';
+    badge.textContent='● Paused';badge.className='db-card-tag tag-warn';
+    if(simAnimId)cancelAnimationFrame(simAnimId);
+  }
+};
+function runSimulation(){
+  const scenario=document.getElementById('simScenario').value;
+  const results={
+    'Baseline Scenario':{thru:247,oee:87.4,bottle:'PRESS-2',risk:'Low'},
+    '+20% Demand Spike':{thru:198,oee:72.1,bottle:'WELD-B',risk:'High'},
+    'Machine PRESS-2 Down':{thru:219,oee:79.3,bottle:'LATHE-A',risk:'Med'},
+    'Supply Delay — Supplier B':{thru:231,oee:82.7,bottle:'EDM-01',risk:'Med'},
+    'New Product Introduction':{thru:263,oee:91.2,bottle:'CMM-A',risk:'Low'}
+  }[scenario]||{thru:247,oee:87.4,bottle:'PRESS-2',risk:'Low'};
+  setTimeout(()=>{
+    document.getElementById('sim-thru').textContent=results.thru;document.getElementById('sim-thru-chg').textContent=results.thru>=247?'↑ Above baseline':'↓ Below baseline';document.getElementById('sim-thru-chg').style.color=results.thru>=247?'var(--accent3)':'var(--accent)';
+    document.getElementById('sim-oee').textContent=results.oee+'%';document.getElementById('sim-oee-chg').style.color=results.oee>=85?'var(--accent3)':'var(--accent)';document.getElementById('sim-oee-chg').textContent=results.oee>=85?'↑ Above target':'↓ Below target';
+    document.getElementById('sim-bottle').textContent=results.bottle;document.getElementById('sim-bottle-chg').textContent='Primary constraint';
+    document.getElementById('sim-risk').textContent=results.risk;document.getElementById('sim-risk-chg').style.color=results.risk==='Low'?'var(--accent3)':results.risk==='Med'?'var(--gold)':'var(--accent)';document.getElementById('sim-risk-chg').textContent='Based on 10K scenarios';
+    buildSimChart();
+  },1200);
+}
+function startSimCanvas(){
+  const canvas=document.getElementById('simCanvas');if(!canvas)return;
+  const W=canvas.offsetWidth;canvas.width=W;const H=canvas.height;
+  const ctx=canvas.getContext('2d');
+  const nodes=Array.from({length:16},(_,i)=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.6,vy:(Math.random()-.5)*.6,r:2+Math.random()*4,pulse:Math.random()*Math.PI*2,color:['#e8451a','#1a6ee8','#18a86b','#c9a84c'][i%4]}));
+  const pkts=[];function spawnP(){if(pkts.length>20)return;const a=nodes[Math.floor(Math.random()*nodes.length)],b=nodes[Math.floor(Math.random()*nodes.length)];if(a===b)return;pkts.push({a,b,t:0,c:a.color})}
+  setInterval(spawnP,400);
+  function draw(){
+    if(!simRunning){return}
+    simAnimId=requestAnimationFrame(draw);simFrame++;
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#0f0f12';ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle='rgba(255,255,255,.025)';ctx.lineWidth=.5;
+    for(let x=0;x<W;x+=25){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}
+    for(let y=0;y<H;y+=25){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+    nodes.forEach((n,i)=>nodes.slice(i+1).forEach(m=>{const d=Math.hypot(n.x-m.x,n.y-m.y);if(d<120){ctx.strokeStyle=`rgba(255,255,255,${.04*(1-d/120)})`;ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);ctx.stroke()}}));
+    for(let i=pkts.length-1;i>=0;i--){const p=pkts[i];p.t+=.016;if(p.t>=1){pkts.splice(i,1);continue}const x=p.a.x+(p.b.x-p.a.x)*p.t,y=p.a.y+(p.b.y-p.a.y)*p.t;const g=ctx.createRadialGradient(x,y,0,x,y,8);g.addColorStop(0,p.c+'aa');g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);ctx.fill()}
+    nodes.forEach(n=>{n.pulse+=.04;n.x+=n.vx;n.y+=n.vy;if(n.x<10||n.x>W-10)n.vx*=-1;if(n.y<10||n.y>H-10)n.vy*=-1;const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,14+Math.sin(n.pulse)*3);g.addColorStop(0,n.color+'44');g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.beginPath();ctx.arc(n.x,n.y,14,0,Math.PI*2);ctx.fill();ctx.fillStyle=n.color;ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill()});
+    ctx.font='9px Geist Mono,monospace';ctx.fillStyle='rgba(255,255,255,.2)';ctx.fillText('TICK: '+simFrame+'  NODES: '+nodes.length+'  FLOWS: '+pkts.length,8,H-8);
+  }
+  draw();
+}
+
+/* ═══ LIVE UPDATES ═══ */
+function startLiveUpdates(){
+  setInterval(()=>{
+    const u=230+Math.floor(Math.random()*30);const o=(85+Math.random()*8).toFixed(1);const d=30+Math.floor(Math.random()*25);
+    const update=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
+    update('kv-units',u);update('kv-oee',o+'%');update('kv-defect',d);update('mfg-oee',o+'%');update('mfg-units',u);
+  },2200);
+}
+</script>
+</body>
+</html>
